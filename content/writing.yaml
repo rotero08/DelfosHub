@@ -1,0 +1,36 @@
+# Writing that you add or adjust by hand.
+#
+# `pnpm sync` already collects the newest posts of every project that has a `feed` (see
+# projects.yaml) into writing.synced.json. Use this file for two things:
+#
+#   1. Add something the sync cannot see: give it title, url, date, project and lang.
+#   2. Improve a synced post: repeat its `url` and add only the fields you want to change.
+#      `gloss` is the one-line summary shown to visitors reading the hub in another
+#      language than the post; `pinned: true` keeps a post at the top.
+#
+#   project   the id of a project in projects.yaml (it gives the row its colour and label)
+#   lang      the language the post is written in (en, es, ja)
+
+- url: https://hibi-blog.delfost.workers.dev/japones/wa-y-ga/
+  gloss:
+    en: A practical way to start telling the topic of a sentence from its subject.
+
+- url: https://hibi-blog.delfost.workers.dev/japones/ganbaru/
+  gloss:
+    en: What ganbaru means, when you hear it, and why "try hard" misses it.
+
+- url: https://hibi-blog.delfost.workers.dev/japones/contadores/
+  gloss:
+    en: The three or four counters that cover almost everything at the start.
+
+- url: https://hibi-blog.delfost.workers.dev/japones/wo-y-ni/
+  gloss:
+    en: The two particles that travel with nearly every action verb.
+
+- url: https://hibi-blog.delfost.workers.dev/japones/de-lugar-o-medio/
+  gloss:
+    en: One particle for where an action happens and for what it is done with.
+
+- url: https://hibi-blog.delfost.workers.dev/japones/kanji-sol/
+  gloss:
+    en: One kanji, two ideas, the sun and the unit of time.

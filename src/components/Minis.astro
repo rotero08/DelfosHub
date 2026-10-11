@@ -1,0 +1,161 @@
+---
+// Mini projects: a compact grid. A tile is a link only when it has somewhere public to go.
+import SectionHead from './SectionHead.astro';
+import { getMinis } from '../lib/content';
+import { ui, type Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+	no: number;
+}
+
+const { lang, no } = Astro.props;
+const t = ui[lang];
+const minis = await getMinis();
+---
+
+<section class="section wrap" id="minis">
+	<SectionHead no={no} title={t.nav.minis} hint={t.hint.minis} />
+
+	<ul class="tiles">
+		{
+			minis.map((mini) => {
+				const name = typeof mini.name === 'string' ? mini.name : mini.name[lang];
+				return (
+					<li class:list={['tile', { linked: mini.href }]}>
+						<h3>
+							{mini.href ? (
+								<a href={mini.href} data-track={`mini:${mini.id}`}>
+									{name}
+								</a>
+							) : (
+								name
+							)}
+						</h3>
+						<p class="text">{mini.description[lang]}</p>
+						<ul class="tags">
+							{mini.status && <li class="tag status">{mini.status[lang]}</li>}
+							{mini.stack.map((item) => (
+								<li class="tag">{item}</li>
+							))}
+						</ul>
+						{mini.href && (
+							<p class="go" aria-hidden="true">
+								{mini.isRepo ? t.source : t.open}
+								<svg class="arrow" viewBox="0 0 16 16">
+									<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+								</svg>
+							</p>
+						)}
+					</li>
+				);
+			})
+		}
+	</ul>
+</section>
+
+<style>
+	.tiles {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+		/* Each tile draws a hairline around itself and the lines of neighbours share the gap, so
+		   the grid reads as one ruled sheet and an unfilled last row leaves nothing behind. */
+		gap: 1px;
+		padding: 1px;
+	}
+
+	.tile {
+		position: relative;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		gap: 0.7rem;
+		padding: 1.3rem 1.3rem 1.2rem;
+		box-shadow: 0 0 0 1px var(--line);
+		transition:
+			background-color 0.12s,
+			color 0.12s;
+	}
+
+	h3 {
+		font-family: var(--font-display);
+		font-size: 1.6rem;
+		font-weight: 600;
+		line-height: 1.05;
+		letter-spacing: 0.01em;
+		overflow-wrap: anywhere;
+	}
+
+	h3 a {
+		text-decoration: none;
+	}
+
+	h3 a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+	}
+
+	h3 a:focus-visible {
+		outline: none;
+	}
+
+	.tile:has(a:focus-visible) {
+		outline: 3px solid var(--accent);
+		outline-offset: -3px;
+	}
+
+	.text {
+		font-size: 1.02rem;
+		line-height: 1.45;
+		color: var(--muted);
+		text-wrap: pretty;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.status {
+		border-color: var(--accent);
+		color: var(--text);
+	}
+
+	.go {
+		position: absolute;
+		top: 1.35rem;
+		right: 1.2rem;
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.linked h3 {
+		padding-right: 4.5rem;
+	}
+
+	/* A linked tile inverts when pointed at, the same way a menu row does. */
+	.linked:hover,
+	.linked:focus-within {
+		background: var(--slab);
+		color: var(--on-slab);
+	}
+
+	.linked:hover :is(.text, .tag, .go),
+	.linked:focus-within :is(.text, .tag, .go) {
+		color: inherit;
+		border-color: currentColor;
+	}
+
+	.linked:hover .arrow,
+	.linked:focus-within .arrow {
+		transform: translate(3px, -3px);
+	}
+</style>

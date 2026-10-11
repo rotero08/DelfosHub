@@ -1,0 +1,225 @@
+---
+// Main projects: one large card each, carrying the project's own colour and glyph.
+import SectionHead from './SectionHead.astro';
+import { getProjects } from '../lib/content';
+import { ui, type Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+	no: number;
+}
+
+const { lang, no } = Astro.props;
+const t = ui[lang];
+const projects = await getProjects();
+const isJapanese = (s: string) => /[぀-ヿ㐀-鿿]/.test(s);
+---
+
+<section class="section wrap" id="projects">
+	<SectionHead no={no} title={t.nav.projects} hint={t.hint.projects} />
+
+	<ul class="cards">
+		{
+			projects.map((p, i) => (
+				<li class="card">
+					<div class="top">
+						{/* The colour is an SVG fill, not a style attribute: the security policy forbids those. */}
+						<svg class="fill" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+							<polygon points="0,0 100,0 100,80 0,100" fill={p.color} />
+						</svg>
+						<span class="glyph" lang={isJapanese(p.glyph) ? 'ja' : undefined} aria-hidden="true">
+							{p.glyph}
+						</span>
+						<span class="plate" aria-hidden="true">
+							No. {String(i + 1).padStart(2, '0')}
+						</span>
+						<h3 class="display">
+							<a href={p.url} data-track={`project:${p.id}`}>
+								{p.name}
+							</a>
+						</h3>
+					</div>
+
+					<div class="body">
+						<p class="label">
+							{p.kind[lang]} · {t.writtenIn[p.language]}
+						</p>
+						<p class="text">{p.description[lang]}</p>
+						{p.facts.length > 0 && (
+							<ul class="facts">
+								{p.facts.map((fact) => (
+									<li>{fact[lang]}</li>
+								))}
+							</ul>
+						)}
+						<p class="go" aria-hidden="true">
+							{t.visit}
+							<svg class="arrow" viewBox="0 0 16 16">
+								<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+							</svg>
+						</p>
+					</div>
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	.cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+		gap: clamp(1.25rem, 3vw, 2.25rem);
+	}
+
+	.card {
+		position: relative;
+		display: grid;
+		grid-template-rows: auto 1fr;
+		background: var(--surface);
+		border: 1px solid var(--line);
+		transition:
+			transform 0.2s var(--snap),
+			box-shadow 0.2s var(--snap);
+	}
+
+	/* Pointing at a card lifts it off a hard shadow, like a selected panel. */
+	.card:hover,
+	.card:focus-within {
+		transform: translate(-5px, -5px);
+		box-shadow: 9px 9px 0 var(--slab);
+	}
+
+	.top {
+		position: relative;
+		isolation: isolate;
+		display: grid;
+		align-content: end;
+		min-height: clamp(11rem, 24vw, 14rem);
+		padding: 1.25rem 1.4rem 2.6rem;
+		color: var(--ink);
+		overflow: hidden;
+	}
+
+	.fill {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		width: 100%;
+		height: 100%;
+	}
+
+	.glyph {
+		position: absolute;
+		top: -0.16em;
+		right: 0.06em;
+		z-index: -1;
+		font-family: var(--font-display);
+		font-size: clamp(8rem, 20vw, 11.5rem);
+		font-style: italic;
+		font-weight: 800;
+		line-height: 1;
+		letter-spacing: -0.03em;
+		opacity: 0.16;
+		transition: transform 0.3s var(--snap);
+	}
+
+	.glyph:lang(ja) {
+		font-family: 'Hiragino Sans', 'Yu Gothic', 'Noto Sans CJK JP', 'Noto Sans JP', sans-serif;
+		font-size: clamp(6.5rem, 16vw, 9.5rem);
+		font-style: normal;
+		top: 0;
+	}
+
+	.card:hover .glyph,
+	.card:focus-within .glyph {
+		transform: translateX(-0.06em) scale(1.05);
+	}
+
+	.plate {
+		position: absolute;
+		top: 1.1rem;
+		left: 1.4rem;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	h3 {
+		font-size: clamp(2.4rem, 1.7rem + 2.6vw, 3.4rem);
+		text-wrap: balance;
+	}
+
+	h3 a {
+		text-decoration: none;
+	}
+
+	/* The whole card is the link: its name stretches over everything. */
+	h3 a::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+
+	h3 a:focus-visible {
+		outline: none;
+	}
+
+	.card:has(a:focus-visible) {
+		outline: 3px solid var(--accent);
+		outline-offset: 4px;
+	}
+
+	.body {
+		display: grid;
+		align-content: start;
+		gap: 0.9rem;
+		padding: 0.4rem 1.4rem 1.4rem;
+	}
+
+	.text {
+		text-wrap: pretty;
+	}
+
+	.facts {
+		display: grid;
+		gap: 0.3rem;
+		font-size: 1.02rem;
+		color: var(--muted);
+	}
+
+	.facts li {
+		display: flex;
+		gap: 0.6rem;
+	}
+
+	.facts li::before {
+		content: '';
+		flex: none;
+		width: 0.55rem;
+		height: 0.55rem;
+		margin-top: 0.52em;
+		background: var(--accent);
+		clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+	}
+
+	.go {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-top: 0.4rem;
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+	}
+
+	.card:hover .arrow,
+	.card:focus-within .arrow {
+		transform: translate(3px, -3px);
+	}
+</style>

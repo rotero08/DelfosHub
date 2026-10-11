@@ -1,0 +1,138 @@
+---
+// The command menu: every section of the hub as one numbered list. It is the site's index
+// (shown in the hero) and its small-screen navigation (shown in the overlay).
+import { sections, ui, type Locale, type Section } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+	/** Where this copy sits, so clicks can be told apart: menu-hero:projects, menu-overlay:about. */
+	where: 'hero' | 'overlay';
+	/** How many things each section holds, shown at the end of its row. */
+	counts?: Partial<Record<Section, number>>;
+	/** Address of the home page, when the menu is shown on another page. */
+	home?: string;
+}
+
+const { lang, where, counts = {}, home = '' } = Astro.props;
+const t = ui[lang];
+---
+
+<ol class:list={['menu', where]} data-menu>
+	{
+		sections.map((id, i) => (
+			<li>
+				<a href={`${home}#${id}`} data-track={`menu-${where}:${id}`}>
+					<span class="no" aria-hidden="true">
+						{String(i + 1).padStart(2, '0')}
+					</span>
+					<span class="name display">{t.nav[id]}</span>
+					<span class="hint">{t.hint[id]}</span>
+					{counts[id] !== undefined && (
+						<span class="count" aria-hidden="true">
+							{counts[id]}
+						</span>
+					)}
+				</a>
+			</li>
+		))
+	}
+</ol>
+
+<style>
+	.menu {
+		display: grid;
+	}
+
+	a {
+		position: relative;
+		isolation: isolate;
+		display: grid;
+		grid-template-columns: 2.1rem 1fr auto;
+		grid-template-areas: 'no name count' '. hint count';
+		align-items: baseline;
+		column-gap: 0.6rem;
+		padding: 0.5rem 1.6rem 0.45rem 0.7rem;
+		text-decoration: none;
+	}
+
+	/* The slab: slides in behind the row you point at or tab to. */
+	a::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: var(--slab);
+		clip-path: polygon(0 0, 100% 0, calc(100% - 1.1rem) 100%, 0 100%);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.2s var(--snap);
+	}
+
+	a:hover::before,
+	a:focus-visible::before {
+		transform: none;
+	}
+
+	a:hover,
+	a:focus-visible {
+		color: var(--on-slab);
+	}
+
+	a:hover :is(.no, .hint, .count),
+	a:focus-visible :is(.no, .hint, .count) {
+		color: inherit;
+	}
+
+	.no {
+		grid-area: no;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		color: var(--accent);
+	}
+
+	.name {
+		grid-area: name;
+		font-size: clamp(2rem, 1.3rem + 2.6vw, 2.9rem);
+	}
+
+	.hint {
+		grid-area: hint;
+		font-size: 0.98rem;
+		line-height: 1.35;
+		color: var(--muted);
+	}
+
+	.count {
+		grid-area: count;
+		align-self: center;
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-style: italic;
+		font-weight: 800;
+		line-height: 1;
+		color: var(--muted);
+	}
+
+	.no,
+	.hint,
+	.count {
+		transition: color 0.12s;
+	}
+
+	/* On a phone the hero keeps its rows to one line each, so the whole index fits on the
+	   first screen. The hints are still in the overlay menu and above every section. */
+	@media (max-width: 30rem) {
+		.hero a {
+			grid-template-areas: 'no name count';
+			align-items: center;
+			min-height: 3rem;
+			padding-block: 0.2rem 0.1rem;
+		}
+
+		.hero .hint {
+			display: none;
+		}
+	}
+</style>

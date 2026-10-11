@@ -1,0 +1,76 @@
+---
+import site from '../../site.config.mjs';
+import { homeOf, ui, type Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const other: Locale = lang === 'en' ? 'es' : 'en';
+const counting = Boolean(site.analytics.clickEndpoint || site.analytics.cloudflareBeaconToken);
+---
+
+<footer class="foot">
+	<div class="wrap foot-in">
+		<p class="mark">
+			<span class="wordmark" aria-hidden="true">Delfos<span class="wordmark-t">T</span></span>
+			<span class="sr-only">{site.name}</span>
+		</p>
+		<p class="note">{`${t.colophon} ${counting ? t.privacyOn : t.privacyOff}`}</p>
+		<p class="links">
+			<a href={homeOf(other)} hreflang={other} lang={other} data-track={`lang-footer:${other}`}>{t.otherLang}</a>
+			<a href="#top" data-track="to-top">{t.toTop}</a>
+		</p>
+	</div>
+</footer>
+
+<style>
+	.foot {
+		margin-top: clamp(2rem, 6vw, 4rem);
+		border-top: 1px solid var(--line);
+	}
+
+	.foot-in {
+		display: grid;
+		gap: 0.9rem;
+		padding-block: 2.25rem 2.75rem;
+	}
+
+	.mark {
+		font-size: 2rem;
+	}
+
+	.note {
+		font-size: 1rem;
+		color: var(--muted);
+	}
+
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.5rem;
+	}
+
+	.links a {
+		padding-block: 0.6rem;
+		font-family: var(--font-display);
+		font-size: 1rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
+	}
+
+	@media (min-width: 48rem) {
+		.foot-in {
+			grid-template-columns: auto 1fr auto;
+			align-items: center;
+			gap: 2rem;
+		}
+	}
+</style>

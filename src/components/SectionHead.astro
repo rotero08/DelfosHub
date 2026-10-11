@@ -1,0 +1,60 @@
+---
+// The heading every section opens with: its number in a cut slab, its name, one line.
+interface Props {
+	no: number;
+	title: string;
+	hint: string;
+}
+
+const { no, title, hint } = Astro.props;
+---
+
+<header class="head">
+	<span class="no" aria-hidden="true">{String(no).padStart(2, '0')}</span>
+	<h2 class="display">{title}</h2>
+	<p class="hint">{hint}</p>
+</header>
+
+<style>
+	.head {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: center;
+		column-gap: 0.9rem;
+		margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+	}
+
+	.no {
+		padding: 0.3rem 0.8rem 0.2rem 0.6rem;
+		background: var(--accent);
+		color: var(--on-accent);
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-style: italic;
+		font-weight: 800;
+		line-height: 1;
+		clip-path: polygon(0 0, 100% 8%, 86% 100%, 6% 92%);
+		transform: rotate(-4deg);
+	}
+
+	h2 {
+		display: flex;
+		align-items: center;
+		gap: 1.1rem;
+		font-size: clamp(2.6rem, 1.6rem + 4.4vw, 4.6rem);
+	}
+
+	/* A rule runs from the name to the edge of the column. */
+	h2::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: var(--line);
+	}
+
+	.hint {
+		grid-column: 2;
+		margin-top: 0.35rem;
+		color: var(--muted);
+	}
+</style>

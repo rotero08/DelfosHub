@@ -1,0 +1,187 @@
+---
+import { Font } from 'astro:assets';
+import site from '../../site.config.mjs';
+import { themeScript } from '../lib/theme-script.mjs';
+import { homeOf, locales, ui, type Locale } from '../i18n/ui';
+import '../styles/global.css';
+
+interface Props {
+	lang: Locale;
+	title?: string;
+	description?: string;
+	/** Pages that should stay out of search results, such as the 404 page. */
+	noindex?: boolean;
+}
+
+const { lang, noindex = false } = Astro.props;
+const t = ui[lang];
+const title = Astro.props.title ?? t.title;
+const description = Astro.props.description ?? t.description;
+
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const canonical = absolute(homeOf(lang));
+const preview = absolute('/og.png');
+const { clickEndpoint, cloudflareBeaconToken } = site.analytics;
+const ogLocale = { en: 'en_US', es: 'es_ES' };
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: site.name,
+	url: absolute('/'),
+	inLanguage: [...locales],
+	description: ui.en.description,
+	author: { '@type': 'Person', name: site.name, url: absolute('/') },
+};
+---
+
+<!doctype html>
+<html lang={lang} data-clicks={clickEndpoint || undefined}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<script is:inline set:html={themeScript} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="author" content={site.name} />
+		<meta name="color-scheme" content="dark light" />
+		<meta name="theme-color" content="#0b0c1e" data-night="#0b0c1e" data-day="#f2ecdf" />
+		{noindex && <meta name="robots" content="noindex" />}
+
+		{
+			!noindex && (
+				<>
+					<link rel="canonical" href={canonical} />
+					{locales.map((l) => (
+						<link rel="alternate" hreflang={l} href={absolute(homeOf(l))} />
+					))}
+					<link rel="alternate" hreflang="x-default" href={absolute('/')} />
+				</>
+			)
+		}
+
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content={site.name} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:locale" content={ogLocale[lang]} />
+		{locales.filter((l) => l !== lang).map((l) => <meta property="og:locale:alternate" content={ogLocale[l]} />)}
+		<meta property="og:image" content={preview} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={`${site.name}. ${t.tagline}`} />
+		<meta name="twitter:card" content="summary_large_image" />
+
+		<Font cssVariable="--font-display" preload={[{ weight: 800, style: 'italic' }]} />
+		<Font cssVariable="--font-body" preload={[{ style: 'normal' }]} />
+
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+		{
+			cloudflareBeaconToken && (
+				<script
+					is:inline
+					defer
+					src="https://static.cloudflareinsights.com/beacon.min.js"
+					data-cf-beacon={JSON.stringify({ token: cloudflareBeaconToken })}
+				/>
+			)
+		}
+	</head>
+	<body>
+		<a class="skip" href="#main">{t.skip}</a>
+		<slot />
+	</body>
+</html>
+
+<script>
+	// The whole interactive layer of the site. Everything here is an enhancement: the page
+	// reads, navigates and switches theme without it.
+	const root = document.documentElement;
+
+	// Theme: remember the choice, and tint the browser's own chrome to match.
+	const themeSwitch = document.querySelector<HTMLInputElement>('#theme-switch');
+	const chrome = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+	const tint = () => {
+		if (chrome) chrome.content = (root.dataset.theme === 'light' ? chrome.dataset.day : chrome.dataset.night) ?? chrome.content;
+	};
+	tint();
+	if (themeSwitch) {
+		themeSwitch.checked = root.dataset.theme === 'light';
+		themeSwitch.addEventListener('change', () => {
+			const theme = themeSwitch.checked ? 'light' : 'dark';
+			root.dataset.theme = theme;
+			tint();
+			try {
+				localStorage.setItem('theme', theme);
+			} catch {
+				// Storage can be blocked; the switch still works for this visit.
+			}
+		});
+	}
+
+	// The overlay menu closes itself once a destination is chosen.
+	const overlay = document.querySelector<HTMLElement>('#menu');
+	overlay?.addEventListener('click', (event) => {
+		if ((event.target as Element).closest('a')) overlay.hidePopover?.();
+	});
+
+	// Command menus move with the arrow keys, like the game menus they borrow from.
+	for (const menu of document.querySelectorAll<HTMLElement>('[data-menu]')) {
+		menu.addEventListener('keydown', (event) => {
+			const step = event.key === 'ArrowDown' ? 1 : event.key === 'ArrowUp' ? -1 : 0;
+			if (!step) return;
+			const links = [...menu.querySelectorAll<HTMLAnchorElement>('a')];
+			const at = links.indexOf(document.activeElement as HTMLAnchorElement);
+			if (at < 0) return;
+			event.preventDefault();
+			links[(at + step + links.length) % links.length].focus();
+		});
+	}
+
+	// Click counting. Dormant until an endpoint is set in site.config.mjs. It sends which
+	// marked element was used and where it led, and nothing about the visitor.
+	const endpoint = root.dataset.clicks;
+	if (endpoint) {
+		const report = (event: Event) => {
+			const el = (event.target as Element).closest<HTMLElement>('[data-track]');
+			if (!el) return;
+			navigator.sendBeacon(
+				endpoint,
+				JSON.stringify({
+					id: el.dataset.track,
+					to: el instanceof HTMLAnchorElement ? el.href : '',
+					page: location.pathname,
+				}),
+			);
+		};
+		addEventListener('click', report, { capture: true });
+		addEventListener('auxclick', report, { capture: true });
+	}
+</script>
+
+<style>
+	.skip {
+		position: absolute;
+		top: 0.5rem;
+		left: 0.5rem;
+		z-index: 100;
+		padding: 0.5rem 0.9rem;
+		background: var(--slab);
+		color: var(--on-slab);
+		font-family: var(--font-display);
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-decoration: none;
+		transform: translateY(-200%);
+	}
+
+	.skip:focus {
+		transform: none;
+	}
+</style>

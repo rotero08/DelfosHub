@@ -1,0 +1,30 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+*.log
+
+# environment and secrets
+.env
+.env.*
+!.env.example
+.dev.vars*
+
+# Cloudflare local state
+.wrangler/
+
+# editor and OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# never commit source documents that carry personal details
+*.pdf
+*.docx
+private/

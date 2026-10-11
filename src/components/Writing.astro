@@ -1,0 +1,210 @@
+---
+// Latest writing: one row per post, newest first, each marked with its project's colour.
+import SectionHead from './SectionHead.astro';
+import { getProjects, getWriting } from '../lib/content';
+import { formatDate, ui, type Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+	no: number;
+}
+
+const { lang, no } = Astro.props;
+const t = ui[lang];
+const projects = new Map((await getProjects()).map((p) => [p.id, p]));
+const posts = await getWriting();
+const sources = [...new Set(posts.map((p) => p.project))].flatMap((id) => projects.get(id) ?? []);
+---
+
+<section class="section wrap" id="writing">
+	<SectionHead no={no} title={t.nav.writing} hint={t.hint.writing} />
+
+	<ol class="posts">
+		{
+			posts.map((post) => {
+				const project = projects.get(post.project);
+				// A one-line summary, when there is one in the reader's language.
+				const line = post.gloss?.[lang] ?? (post.lang === lang ? post.summary : undefined);
+				return (
+					<li>
+						<a href={post.url} data-track={`post:${new URL(post.url).pathname}`}>
+							<time datetime={post.date.toISOString().slice(0, 10)}>{formatDate(post.date, lang)}</time>
+							<span class="what">
+								<span class="title" lang={post.lang === lang ? undefined : post.lang}>
+									{post.title}
+								</span>
+								{line && <span class="line">{line}</span>}
+							</span>
+							<span class="from">
+								{project && (
+									<svg class="dot" viewBox="0 0 10 10" aria-hidden="true">
+										<polygon points="5,0 10,5 5,10 0,5" fill={project.color} />
+									</svg>
+								)}
+								{project?.name ?? post.project}
+								<span class="lang">
+									<span aria-hidden="true">{post.lang}</span>
+									<span class="sr-only">{t.langName[post.lang]}</span>
+								</span>
+							</span>
+						</a>
+					</li>
+				);
+			})
+		}
+	</ol>
+
+	{
+		sources.length > 0 && (
+			<p class="more">
+				{sources.map((p) => (
+					<a href={p.url} data-track={`more:${p.id}`}>
+						{t.moreOn} {p.name}
+						<svg class="arrow" viewBox="0 0 16 16" aria-hidden="true">
+							<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+						</svg>
+					</a>
+				))}
+			</p>
+		)
+	}
+</section>
+
+<style>
+	.posts {
+		border-top: 1px solid var(--line);
+	}
+
+	.posts li {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.posts a {
+		position: relative;
+		isolation: isolate;
+		display: grid;
+		grid-template-columns: 1fr auto;
+		grid-template-areas: 'when from' 'what what';
+		gap: 0.3rem 1rem;
+		padding: 0.95rem 1.4rem 0.95rem 0.7rem;
+		margin-inline: -0.7rem;
+		text-decoration: none;
+	}
+
+	.posts a::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: var(--slab);
+		clip-path: polygon(0 0, 100% 0, calc(100% - 1.1rem) 100%, 0 100%);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.2s var(--snap);
+	}
+
+	.posts a:hover::before,
+	.posts a:focus-visible::before {
+		transform: none;
+	}
+
+	.posts a:hover,
+	.posts a:focus-visible {
+		color: var(--on-slab);
+	}
+
+	.posts a:hover :is(time, .line, .from, .lang),
+	.posts a:focus-visible :is(time, .line, .from, .lang) {
+		color: inherit;
+		border-color: currentColor;
+	}
+
+	time,
+	.from {
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		color: var(--muted);
+		white-space: nowrap;
+	}
+
+	time {
+		grid-area: when;
+	}
+
+	.what {
+		grid-area: what;
+		display: grid;
+		gap: 0.15rem;
+	}
+
+	.title {
+		font-size: 1.3rem;
+		font-weight: 500;
+		line-height: 1.25;
+		text-wrap: balance;
+	}
+
+	.line {
+		font-size: 1rem;
+		line-height: 1.4;
+		color: var(--muted);
+	}
+
+	.from {
+		grid-area: from;
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	.dot {
+		width: 0.65rem;
+		height: 0.65rem;
+	}
+
+	.lang {
+		padding: 0.1rem 0.35rem 0;
+		border: 1px solid var(--line);
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+
+	.more {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.75rem;
+		margin-top: 1.4rem;
+	}
+
+	.more a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		padding-block: 0.6rem;
+		font-family: var(--font-display);
+		font-size: 1.1rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
+	}
+
+	.more a:hover .arrow {
+		transform: translate(3px, -3px);
+	}
+
+	@media (min-width: 48rem) {
+		.posts a {
+			grid-template-columns: 7.5rem 1fr auto;
+			grid-template-areas: 'when what from';
+			align-items: baseline;
+			column-gap: 1.5rem;
+		}
+	}
+</style>

@@ -1,0 +1,99 @@
+# Experience, kept brief and anonymous on purpose: no employer, school, city or country
+# names. The full detail belongs in the CV, which never lives in this repository.
+#
+# `timeline` shows top to bottom. `when` is free text ("Now", "2024", "2021 to 2023").
+# `skills` are groups of short tags.
+
+note:
+  en: Kept short on purpose. If you came here from my CV, the detail is there.
+  es: Breve a propósito. Si llegaste desde mi CV, el detalle está allí.
+
+focus:
+  en: Python, data and automation, growing toward machine-learning tooling.
+  es: Python, datos y automatización, con rumbo hacia herramientas de machine learning.
+
+timeline:
+  - when:
+      en: Now
+      es: Ahora
+    role:
+      en: Computer engineering student
+      es: Estudiante de ingeniería de computación
+    detail:
+      en: In the last stretch of the degree, building software end to end on the side.
+      es: En la recta final de la carrera, construyendo software de principio a fin por mi cuenta.
+
+  - when:
+      en: "2024"
+      es: "2024"
+    role:
+      en: Course assistant
+      es: Asistente de curso
+    detail:
+      en: >-
+        University extension course on mathematics and music. Built the interactive web
+        app (React, D3.js) that illustrates its ideas.
+      es: >-
+        Curso de extensión universitaria sobre matemáticas y música. Construí la
+        aplicación web interactiva (React, D3.js) que ilustra sus ideas.
+
+  - when:
+      en: "2022"
+      es: "2022"
+    role:
+      en: Spanish to Japanese translator
+      es: Traductor de español a japonés
+    detail:
+      en: Project contract translating product copy for a language-learning company.
+      es: Contrato por proyecto traduciendo textos de producto para una empresa de aprendizaje de idiomas.
+
+  - when:
+      en: Earlier
+      es: Antes
+    role:
+      en: Mechatronic engineering studies
+      es: Estudios de ingeniería mecatrónica
+    detail:
+      en: Eight semesters of hardware and control before moving to software.
+      es: Ocho semestres de hardware y control antes de pasar al software.
+
+skills:
+  - name:
+      en: Software
+      es: Software
+    items: [Python, TypeScript, JavaScript, Java, React, Svelte, Astro, REST APIs]
+
+  - name:
+      en: Data
+      es: Datos
+    items: [pandas, NumPy, SQL, SciPy, Matplotlib, Signal processing]
+
+  - name:
+      en: ML and AI
+      es: ML e IA
+    items: [PyTorch, Whisper, GPU inference]
+
+  - name:
+      en: Tooling
+      es: Herramientas
+    items: [Git, GitHub Actions, Linux, FFmpeg, Selenium, Cloudflare Workers]
+
+languages:
+  - name:
+      en: Spanish
+      es: Español
+    level:
+      en: native
+      es: nativo
+  - name:
+      en: English
+      es: Inglés
+    level:
+      en: advanced
+      es: avanzado
+  - name:
+      en: Japanese
+      es: Japonés
+    level:
+      en: advanced
+      es: avanzado

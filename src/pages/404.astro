@@ -1,0 +1,68 @@
+---
+// One page answers every unknown address, so it speaks both languages at once.
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+---
+
+<Base lang="en" title="Off the map · DelfosT" description="This page does not exist." noindex>
+	<Header lang="en" />
+	<main id="main" class="lost wrap">
+		<p class="code display" aria-hidden="true">404</p>
+		<h1 class="display">Off the map</h1>
+		<p>This path does not lead anywhere yet.</p>
+		<p lang="es">Este camino todavía no lleva a ningún lugar.</p>
+		<p class="ways">
+			<a href="/">Back to the hub</a>
+			<a href="/es/" lang="es" hreflang="es">Volver al hub</a>
+		</p>
+	</main>
+</Base>
+
+<style>
+	.lost {
+		display: grid;
+		align-content: center;
+		justify-items: start;
+		gap: 0.6rem;
+		min-height: calc(100svh - var(--bar));
+		padding-block: 3rem;
+	}
+
+	.code {
+		padding: 0.05em 0.3em 0 0.2em;
+		background: var(--slab);
+		color: var(--on-slab);
+		font-size: clamp(5rem, 22vw, 11rem);
+		clip-path: polygon(4% 0, 100% 6%, 94% 100%, 0 92%);
+		transform: rotate(-3deg);
+	}
+
+	h1 {
+		margin-top: 1.5rem;
+		font-size: clamp(2.6rem, 8vw, 4.6rem);
+	}
+
+	p {
+		color: var(--muted);
+	}
+
+	.ways {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.75rem;
+		margin-top: 1rem;
+	}
+
+	.ways a {
+		padding-block: 0.6rem;
+		color: var(--text);
+		font-family: var(--font-display);
+		font-size: 1.15rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
+	}
+</style>

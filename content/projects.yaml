@@ -1,0 +1,65 @@
+# Main projects: the sites that have a life of their own. They show in this order.
+#
+# To add one, copy a block and change it. Every text shown to visitors needs `en` and `es`.
+#   id        short lowercase name, used in addresses and in analytics (project:<id>)
+#   glyph     one to three characters drawn large on the card
+#   color     the project's own colour, as a hex code. It is only ever used as a fill with
+#             dark text on top, so it has to be bright; the build stops if it is too dark.
+#   language  the language the project itself is written in (en, es, ja)
+#   feed      optional. Lets `pnpm sync` pull the project's newest posts into Writing.
+#               type: rss      url: address of an RSS or Atom feed
+#               type: sitemap  url: address of a sitemap, match: pattern of post addresses,
+#                              titleSuffix: text to cut from the end of page titles
+
+- id: hibi
+  name: Hibi
+  glyph: 日々
+  url: https://hibi-blog.delfost.workers.dev/
+  color: "#ff5c3e"
+  language: es
+  kind:
+    en: Blog and guides
+    es: Blog y guías
+  description:
+    en: >-
+      Days, words, life in Japan. Guides to learning Japanese and honest notes from
+      someone who lived there.
+    es: >-
+      Días, palabras, vida en Japón. Guías de japonés y notas honestas de alguien que
+      vivió allí.
+  facts:
+    - en: Japanese guide in 8 chapters
+      es: Guía de japonés en 8 capítulos
+    - en: Arrival guide in 16 chapters
+      es: Guía de llegada en 16 capítulos
+    - en: Short notes on grammar, kanji and words
+      es: Notas cortas de gramática, kanji y palabras
+  feed:
+    type: sitemap
+    url: https://hibi-blog.delfost.workers.dev/sitemap-0.xml
+    match: "^/japones/(?!tema/)[^/]+/$"
+    titleSuffix: " · Hibi"
+
+- id: pianist
+  name: The Complete Pianist
+  glyph: "88"
+  url: https://piano-guide.delfost.workers.dev/
+  color: "#e9c558"
+  language: en
+  kind:
+    en: Self-study guide
+    es: Guía de autoestudio
+  description:
+    en: >-
+      Teach yourself piano, technique first. A self-paced curriculum where relaxed
+      technique leads and sight-reading joins in, level by level.
+    es: >-
+      Aprende piano por tu cuenta, con la técnica primero. Un plan a tu ritmo donde la
+      técnica relajada va delante y la lectura a primera vista se suma nivel a nivel.
+  facts:
+    - en: Technique foundations
+      es: Fundamentos de técnica
+    - en: Sight-reading path, from pre-staff to level 7
+      es: Ruta de lectura, de pre-pentagrama a nivel 7
+    - en: Harmony and lead-sheet track
+      es: Ruta de armonía y lead sheets

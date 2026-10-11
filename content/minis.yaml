@@ -1,0 +1,70 @@
+# Mini projects: smaller tools and experiments that do not need a site of their own.
+# They show in this order.
+#
+#   id      short lowercase name, used in analytics (mini:<id>)
+#   stack   two to four technologies, shown as small tags
+#   url     optional public address (a store page, a live demo). Makes the tile a link.
+#   repo    optional source-code address. It is only shown when showRepoLinks is turned on
+#           in site.config.mjs, and then only for tiles that have no `url`.
+#   status  optional short label, for example where it is published
+
+- id: nihongo-auto-tracker
+  name: NihongoAutoTracker
+  url: https://addons.mozilla.org/firefox/addon/nihongoautotracker/
+  stack: [TypeScript, Svelte, Web APIs]
+  status:
+    en: Firefox add-on
+    es: Extensión de Firefox
+  description:
+    en: >-
+      Browser extension that measures the Japanese video you watch and the text you read,
+      and logs it to NihongoTracker for you. No telemetry.
+    es: >-
+      Extensión de navegador que mide el video que ves y lo que lees en japonés, y lo
+      registra en NihongoTracker por ti. Sin telemetría.
+
+- id: geodesic-mapper
+  name: Geodesic Mapper
+  stack: [JavaScript, D3]
+  description:
+    en: >-
+      An interactive globe that morphs between 15 map projections and draws the shortest
+      path next to the constant-bearing one.
+    es: >-
+      Un globo interactivo que se transforma entre 15 proyecciones y dibuja la ruta más
+      corta junto a la de rumbo constante.
+
+- id: videosubs-whisper
+  name: videosubs_whisper
+  stack: [Python, Whisper, FFmpeg]
+  description:
+    en: >-
+      Batch pipeline that turns whole folders of video into subtitles in several
+      languages, from speech recognition to the final muxed file.
+    es: >-
+      Proceso por lotes que convierte carpetas enteras de video en subtítulos en varios
+      idiomas, del reconocimiento de voz al archivo final.
+
+- id: voice-spectrum
+  name: Voice Spectral Analyzer
+  stack: [Python, NumPy, PyQt5]
+  description:
+    en: >-
+      Desktop app that shows live microphone audio as waveform, spectrum and spectrogram,
+      with a self-test that measures its own accuracy.
+    es: >-
+      Aplicación de escritorio que muestra el audio del micrófono como onda, espectro y
+      espectrograma, con una autoprueba que mide su propia precisión.
+
+- id: math-music
+  name:
+    en: Maths and music explorer
+    es: Explorador de música y matemáticas
+  stack: [React, D3]
+  description:
+    en: >-
+      Interactive visualisations of the mathematics behind musical ideas, built as
+      teaching material for a course.
+    es: >-
+      Visualizaciones interactivas de las matemáticas detrás de las ideas musicales,
+      hechas como material para un curso.

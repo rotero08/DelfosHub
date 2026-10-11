@@ -1,0 +1,35 @@
+---
+// The whole hub in one language. Both home pages (/ and /es/) render this.
+import Base from '../layouts/Base.astro';
+import Header from './Header.astro';
+import Hero from './Hero.astro';
+import Projects from './Projects.astro';
+import Writing from './Writing.astro';
+import Minis from './Minis.astro';
+import Experience from './Experience.astro';
+import About from './About.astro';
+import Footer from './Footer.astro';
+import { getMinis, getProjects, getWriting } from '../lib/content';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+}
+
+const { lang } = Astro.props;
+const [projects, posts, minis] = await Promise.all([getProjects(), getWriting(), getMinis()]);
+const counts = { projects: projects.length, writing: posts.length, minis: minis.length };
+---
+
+<Base lang={lang}>
+	<Header lang={lang} counts={counts} overHero />
+	<main id="main">
+		<Hero lang={lang} counts={counts} colors={projects.map((p) => p.color)} />
+		<Projects lang={lang} no={1} />
+		<Writing lang={lang} no={2} />
+		<Minis lang={lang} no={3} />
+		<Experience lang={lang} no={4} />
+		<About lang={lang} no={5} />
+	</main>
+	<Footer lang={lang} />
+</Base>

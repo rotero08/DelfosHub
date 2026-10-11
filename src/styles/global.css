@@ -1,0 +1,233 @@
+/* The design system: colours, type and the few shapes every section shares.
+   Component-specific rules live next to their markup in src/components. */
+
+/* ---------- Night (default) ---------- */
+:root {
+	color-scheme: dark;
+
+	--bg: #0b0c1e;
+	--surface: #13152f;
+	--line: #2b2e5e;
+	--text: #f2ecdf;
+	--muted: #a9abcf;
+	--accent: #8b9bff;
+	--on-accent: #0b0c1e;
+	/* The slab is the "selected" block that slides behind whatever you point at. */
+	--slab: #f2ecdf;
+	--on-slab: #0b0c1e;
+	/* Fixed dark ink for text on top of a project colour, in both themes. */
+	--ink: #0b0c1e;
+
+	--sky-a: #0b0c1e;
+	--sky-b: #1d1f55;
+	--orb: #f2ecdf;
+	--orb-glow: rgb(139 155 255 / 0.4);
+	--ridge-far: #262a66;
+	--ridge-mid: #171a47;
+	--star: #f2ecdf;
+	/* The darkest ink of the theme, for shapes seen against the light. */
+	--silhouette: #0b0c1e;
+
+	--wrap: 72rem;
+	--gutter: clamp(1.15rem, 4vw, 3rem);
+	--bar: 3.5rem;
+	--snap: cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* ---------- Day ----------
+   Set by the theme switch. The second selector keeps the switch working with scripts off. */
+:root[data-theme='light'],
+:root:not([data-theme]):has(#theme-switch:checked) {
+	color-scheme: light;
+
+	--bg: #f2ecdf;
+	--surface: #faf6ec;
+	--line: #d3c8ae;
+	--text: #12133a;
+	--muted: #55577a;
+	--accent: #2f3fd0;
+	--on-accent: #f2ecdf;
+	--slab: #12133a;
+	--on-slab: #f2ecdf;
+
+	--sky-a: #f2ecdf;
+	--sky-b: #f5d3a2;
+	--orb: #f29b3a;
+	--orb-glow: rgb(242 155 58 / 0.45);
+	--ridge-far: #c5bfe6;
+	--ridge-mid: #9892d2;
+	--star: #6f6aa8;
+	--silhouette: #12133a;
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	scroll-padding-top: calc(var(--bar) + 1rem);
+	background: var(--bg);
+}
+
+body {
+	margin: 0;
+	background: var(--bg);
+	color: var(--text);
+	font-family: var(--font-body);
+	font-size: 1.125rem;
+	line-height: 1.55;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd,
+figure {
+	margin: 0;
+}
+
+ul,
+ol {
+	padding: 0;
+	list-style: none;
+}
+
+a {
+	color: inherit;
+}
+
+svg {
+	display: block;
+}
+
+::selection {
+	background: var(--accent);
+	color: var(--on-accent);
+}
+
+:focus-visible {
+	outline: 3px solid var(--accent);
+	outline-offset: 3px;
+}
+
+/* ---------- Type ---------- */
+/* Display: condensed, heavy, slanted. Used for names and headings only. */
+.display {
+	font-family: var(--font-display);
+	font-style: italic;
+	font-weight: 800;
+	line-height: 0.92;
+	letter-spacing: -0.005em;
+	text-transform: uppercase;
+}
+
+/* Label: the small caps voice of the interface. */
+.label {
+	font-family: var(--font-display);
+	font-size: 0.95rem;
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* ---------- Layout ---------- */
+.wrap {
+	width: min(100% - 2 * var(--gutter), var(--wrap));
+	margin-inline: auto;
+}
+
+.section {
+	padding-block: clamp(2.75rem, 6vw, 4.5rem);
+}
+
+/* ---------- Shared shapes ---------- */
+/* A small tag: technologies, languages, statuses. */
+.tag {
+	display: inline-block;
+	padding: 0.2em 0.6em 0.15em;
+	border: 1px solid var(--line);
+	font-family: var(--font-display);
+	font-size: 0.9rem;
+	font-weight: 600;
+	letter-spacing: 0.06em;
+	line-height: 1.3;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+/* The wordmark: "Delfos" plus a T standing in its own cut slab. */
+.wordmark {
+	font-family: var(--font-display);
+	font-style: italic;
+	font-weight: 800;
+	line-height: 0.9;
+	letter-spacing: -0.01em;
+	white-space: nowrap;
+}
+
+.wordmark-t {
+	display: inline-block;
+	margin-left: 0.07em;
+	padding: 0.02em 0.16em 0 0.1em;
+	background: var(--slab);
+	color: var(--on-slab);
+	clip-path: polygon(10% 0, 100% 5%, 90% 100%, 0 93%);
+	transform: rotate(-4deg);
+}
+
+/* An arrow that nudges when its link is pointed at. */
+.arrow {
+	width: 0.8em;
+	height: 0.8em;
+	flex: none;
+	transition: transform 0.18s var(--snap);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media print {
+	:root {
+		--bg: #fff;
+		--text: #000;
+		--muted: #333;
+		--line: #999;
+	}
+}

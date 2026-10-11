@@ -1,0 +1,124 @@
+<!doctype html>
+<!-- The social preview card. `pnpm images` opens this file in a headless browser at
+     1200 by 630 and saves the result as public/og.png. It is never published itself.
+     Colours and shapes mirror src/styles/global.css and src/components/Hero.astro. -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@font-face {
+				font-family: 'Barlow Condensed';
+				font-style: italic;
+				font-weight: 800;
+				src: url('../../src/assets/fonts/barlow-condensed-latin-800-italic.woff2') format('woff2');
+			}
+			@font-face {
+				font-family: 'Barlow Condensed';
+				font-weight: 600;
+				src: url('../../src/assets/fonts/barlow-condensed-latin-600-normal.woff2') format('woff2');
+			}
+			@font-face {
+				font-family: 'Alegreya';
+				font-weight: 400 900;
+				src: url('../../src/assets/fonts/alegreya-latin-wght-normal.woff2') format('woff2');
+			}
+			* {
+				box-sizing: border-box;
+				margin: 0;
+			}
+			body {
+				position: relative;
+				width: 1200px;
+				height: 630px;
+				overflow: hidden;
+				background: linear-gradient(#0b0c1e 30%, #1d1f55);
+				color: #f2ecdf;
+				font-family: 'Alegreya', serif;
+			}
+			.text {
+				position: absolute;
+				top: 78px;
+				left: 84px;
+			}
+			.label {
+				font: 600 26px/1 'Barlow Condensed', sans-serif;
+				letter-spacing: 0.1em;
+				text-transform: uppercase;
+				color: #a9abcf;
+			}
+			.name {
+				margin: 18px 0 30px;
+				font: italic 800 232px/0.9 'Barlow Condensed', sans-serif;
+				letter-spacing: -0.01em;
+				white-space: nowrap;
+			}
+			.t {
+				display: inline-block;
+				margin-left: 0.07em;
+				padding: 0.02em 0.16em 0 0.1em;
+				background: #f2ecdf;
+				color: #0b0c1e;
+				clip-path: polygon(10% 0, 100% 5%, 90% 100%, 0 93%);
+				transform: rotate(-4deg);
+			}
+			.tagline {
+				font-size: 46px;
+				font-weight: 500;
+				line-height: 1.15;
+			}
+			.orb {
+				position: absolute;
+				right: 96px;
+				bottom: 34px;
+				width: 300px;
+				height: 300px;
+				border-radius: 50%;
+				background: #f2ecdf;
+				box-shadow: 0 0 150px rgb(139 155 255 / 0.4);
+			}
+			.ridges {
+				position: absolute;
+				inset: auto 0 0;
+				width: 100%;
+				height: 300px;
+			}
+			.post {
+				position: absolute;
+				right: 178px;
+				bottom: 14px;
+				height: 210px;
+				overflow: visible;
+			}
+			.arm {
+				stroke: #0b0c1e;
+				stroke-width: 3.5;
+				stroke-linejoin: round;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="orb"></div>
+		<svg class="ridges" viewBox="0 0 1000 100" preserveAspectRatio="none">
+			<polygon
+				fill="#262a66"
+				points="0,62 60,50 110,58 190,36 240,48 300,30 360,52 430,42 500,60 560,70 640,75 720,70 800,74 880,68 930,58 1000,46 1000,100 0,100"
+			/>
+			<polygon
+				fill="#171a47"
+				points="0,78 80,70 170,80 260,66 340,78 420,72 520,84 620,82 700,87 790,82 880,86 950,78 1000,74 1000,100 0,100"
+			/>
+			<polygon fill="#0b0c1e" points="0,92 150,89 320,93 520,90 700,93 860,90 1000,92 1000,100 0,100" />
+		</svg>
+		<svg class="post" viewBox="0 0 120 150">
+			<path fill="#0b0c1e" d="M56,150V14l4-8 4,8v136Z" />
+			<polygon class="arm" fill="#ff5c3e" points="63,22 109,22 121,32 109,42 63,42" transform="rotate(-3 60 32)" />
+			<polygon class="arm" fill="#e9c558" points="57,49 15,49 3,59 15,69 57,69" transform="rotate(4 60 59)" />
+			<polygon class="arm" fill="#171a47" points="63,76 101,76 113,86 101,96 63,96" transform="rotate(-3 60 86)" />
+		</svg>
+		<div class="text">
+			<p class="label">Personal hub</p>
+			<p class="name">Delfos<span class="t">T</span></p>
+			<p class="tagline">Code, writing and learning in public.</p>
+		</div>
+	</body>
+</html>

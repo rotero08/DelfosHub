@@ -1,0 +1,4 @@
+#!/bin/sh
+# Stops a commit that would put a private term or image metadata into the history.
+# Enabled once per clone with:  git config core.hooksPath .githooks
+exec node scripts/check.mjs --staged

@@ -1,0 +1,191 @@
+---
+// Experience: a short path on one side, skills and languages on the other.
+import SectionHead from './SectionHead.astro';
+import { getExperience } from '../lib/content';
+import { ui, type Locale } from '../i18n/ui';
+
+interface Props {
+	lang: Locale;
+	no: number;
+}
+
+const { lang, no } = Astro.props;
+const t = ui[lang];
+const xp = await getExperience();
+---
+
+<section class="section wrap" id="experience">
+	<SectionHead no={no} title={t.nav.experience} hint={xp.note[lang]} />
+
+	<div class="cols">
+		<div>
+			<h3 class="label">{t.timeline}</h3>
+			<ol class="path">
+				{
+					xp.timeline.map((step) => (
+						<li>
+							<span class="when">{step.when[lang]}</span>
+							<div>
+								<p class="role">{step.role[lang]}</p>
+								<p class="detail">{step.detail[lang]}</p>
+							</div>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+
+		<div class="side">
+			<div>
+				<h3 class="label">{t.focus}</h3>
+				<p class="focus">{xp.focus[lang]}</p>
+			</div>
+
+			<div>
+				<h3 class="label">{t.skills}</h3>
+				<dl class="skills">
+					{
+						xp.skills.map((group) => (
+							<div>
+								<dt>{group.name[lang]}</dt>
+								<dd>
+									<ul class="tags">
+										{group.items.map((item) => (
+											<li class="tag">{item}</li>
+										))}
+									</ul>
+								</dd>
+							</div>
+						))
+					}
+				</dl>
+			</div>
+
+			<div>
+				<h3 class="label">{t.languages}</h3>
+				<ul class="langs">
+					{
+						xp.languages.map((l) => (
+							<li>
+								<span>{l.name[lang]}</span>
+								<span class="level">{l.level[lang]}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cols {
+		display: grid;
+		gap: 2.75rem;
+	}
+
+	.label {
+		margin-bottom: 0.9rem;
+	}
+
+	/* ---------- Path ---------- */
+	.path {
+		display: grid;
+		border-top: 1px solid var(--line);
+	}
+
+	.path li {
+		display: grid;
+		grid-template-columns: 5.2rem 1fr;
+		gap: 1rem;
+		padding-block: 1rem;
+		border-bottom: 1px solid var(--line);
+	}
+
+	.when {
+		font-family: var(--font-display);
+		font-size: 1.35rem;
+		font-style: italic;
+		font-weight: 800;
+		line-height: 1.2;
+		text-transform: uppercase;
+		color: var(--accent);
+	}
+
+	.role {
+		font-size: 1.2rem;
+		font-weight: 600;
+		line-height: 1.3;
+	}
+
+	.detail {
+		margin-top: 0.2rem;
+		font-size: 1.02rem;
+		line-height: 1.45;
+		color: var(--muted);
+		text-wrap: pretty;
+	}
+
+	/* ---------- Side ---------- */
+	.side {
+		display: grid;
+		align-content: start;
+		gap: 2rem;
+	}
+
+	.focus {
+		font-size: 1.2rem;
+		font-weight: 500;
+		line-height: 1.4;
+		text-wrap: balance;
+	}
+
+	.skills {
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.skills > div {
+		display: grid;
+		grid-template-columns: 6.9rem 1fr;
+		gap: 1rem;
+		align-items: baseline;
+	}
+
+	dt {
+		font-size: 1.02rem;
+		font-weight: 600;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.langs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.75rem;
+	}
+
+	.langs li {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		font-weight: 600;
+	}
+
+	.level {
+		font-size: 1rem;
+		font-weight: 400;
+		color: var(--muted);
+	}
+
+	@media (min-width: 58rem) {
+		.cols {
+			grid-template-columns: 1fr 1fr;
+			gap: clamp(2.5rem, 6vw, 5rem);
+		}
+	}
+</style>
