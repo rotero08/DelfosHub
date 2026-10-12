@@ -1,0 +1,10 @@
+{
+  // Cloudflare serves the built site as static assets; no Worker code runs.
+  // `pnpm build` writes the pages and dist/_headers (the security headers) into dist/.
+  "name": "hub",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}

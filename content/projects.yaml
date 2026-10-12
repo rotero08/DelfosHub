@@ -35,10 +35,8 @@
     - en: Short notes on grammar, kanji and words
       es: Notas cortas de gramática, kanji y palabras
   feed:
-    type: sitemap
-    url: https://hibi-blog.delfost.workers.dev/sitemap-0.xml
-    match: "^/japones/(?!tema/)[^/]+/$"
-    titleSuffix: " · Hibi"
+    type: rss
+    url: https://hibi-blog.delfost.workers.dev/rss.xml
 
 - id: pianist
   name: The Complete Pianist

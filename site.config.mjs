@@ -5,7 +5,8 @@ export default {
 	name: 'DelfosT',
 
 	// Public address of the hub. Canonical URLs, the sitemap and the social preview are built
-	// from it. This is a placeholder until the domain exists: change it before the first deploy.
+	// from it. It is the workers.dev address of the Worker named in wrangler.jsonc; change it
+	// when the hub gets its own domain.
 	url: 'https://hub.delfost.workers.dev',
 
 	// How many entries the Writing section shows.
