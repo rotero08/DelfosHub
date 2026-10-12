@@ -117,22 +117,29 @@ attribute on anything new that can be clicked. Nothing is sent until an endpoint
 
 ## Status
 
-Built and verified locally: the full page in both languages and themes, the post sync, the
-safety checks, the social image and icons.
+Built, verified and live at https://hub.delfost.workers.dev: the full page in both languages and
+themes, the post sync, the safety checks, the social image and icons.
+
+**Hosting.** A Cloudflare Worker named `hub` serves `dist/` as static assets (`wrangler.jsonc`):
+`dist/_headers` carries the headers and unknown addresses get the 404 page. A Workers Builds
+trigger watches this repository's `main` branch: every push runs `pnpm run build`, then
+`npx wrangler deploy`. Two consequences:
+
+- The build runs on Cloudflare, where the private terms list does not exist, so `pnpm check`
+  (run locally before pushing) is the gate, not part of the build.
+- `pnpm sync` runs inside that build, so new posts from the project sites reach the hub on its
+  next build, that is, on the next push. Publishing on a project site alone does not refresh it.
+
+By hand, `pnpm build` then `pnpm dlx wrangler@4 deploy` does the same thing.
+
+**GitHub.** The repository is public and its history is a single line under the `DelfosT`
+identity, written after the first history was deleted.
 
 **Deliberately not done yet** (the owner asked to hold these for a later session):
 
-- **Cloudflare.** No Wrangler config, nothing deployed, no account touched. The site is meant for
-  Workers static assets: `dist/` is the assets directory, `dist/_headers` carries the headers, and
-  `404.html` needs `not_found_handling: "404-page"`. The owner's other Workers are named
-  `hibi-blog` and `piano-guide`; the Hibi project (static assets only, no Worker code) is the
-  pattern to follow. Pick a Worker name that does not collide and set `url` in `site.config.mjs`
-  to the final address before the first deploy.
 - **Analytics.** Planned as two free, cookie-less parts: Cloudflare Web Analytics for visits,
   referrers and pages (set `analytics.cloudflareBeaconToken`), and a small first-party endpoint
   that records click events (set `analytics.clickEndpoint`). The endpoint is the only thing that
   would run Worker code. Both settings already adjust the security policy and the footer note.
-- **GitHub.** No remote, and no commits have been made. Decide the commit identity and the
-  repository's visibility with the owner first.
 - **Contact.** The owner chose to show no contact details for now. `content/about/*.md` accepts a
   `contactUrl` when that changes.
