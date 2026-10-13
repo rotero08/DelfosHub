@@ -16,7 +16,7 @@ const isJapanese = (s: string) => /[぀-ヿ㐀-鿿]/.test(s);
 ---
 
 <section class="section wrap" id="projects">
-	<SectionHead no={no} title={t.nav.projects} hint={t.hint.projects} />
+	<SectionHead lang={lang} section="projects" no={no} title={t.nav.projects} hint={t.hint.projects} />
 
 	<ul class="cards">
 		{
@@ -31,7 +31,7 @@ const isJapanese = (s: string) => /[぀-ヿ㐀-鿿]/.test(s);
 							{p.glyph}
 						</span>
 						<span class="plate" aria-hidden="true">
-							No. {String(i + 1).padStart(2, '0')}
+							{t.quest} {String(i + 1).padStart(2, '0')}
 						</span>
 						<h3 class="display">
 							<a href={p.url} data-track={`project:${p.id}`}>
@@ -52,12 +52,22 @@ const isJapanese = (s: string) => /[぀-ヿ㐀-鿿]/.test(s);
 								))}
 							</ul>
 						)}
-						<p class="go" aria-hidden="true">
-							{t.visit}
-							<svg class="arrow" viewBox="0 0 16 16">
-								<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
-							</svg>
-						</p>
+						<div class="foot">
+							<p class="go" aria-hidden="true">
+								{t.visit}
+								<svg class="arrow" viewBox="0 0 16 16">
+									<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+								</svg>
+							</p>
+							{p.repoUrl && (
+								<a class="source" href={p.repoUrl} data-track={`repo:${p.id}`}>
+									{t.source}
+									<svg class="arrow" viewBox="0 0 16 16" aria-hidden="true">
+										<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+									</svg>
+								</a>
+							)}
+						</div>
 					</div>
 				</li>
 			))
@@ -206,11 +216,57 @@ const isJapanese = (s: string) => /[぀-ヿ㐀-鿿]/.test(s);
 		clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 	}
 
+	/* Halftone dots fade in from the lower right corner of the coloured panel, like screen tone. */
+	.top::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-image: radial-gradient(color-mix(in srgb, var(--ink) 30%, transparent) 1.1px, transparent 1.6px);
+		background-size: 8px 8px;
+		clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+		mask-image: linear-gradient(to top left, #000, transparent 62%);
+		pointer-events: none;
+	}
+
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.2rem 1rem;
+		margin-top: 0.4rem;
+	}
+
+	/* The source link rises above the card's stretched link and keeps a full-size touch target. */
+	.source {
+		position: relative;
+		z-index: 2;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		min-height: 2.75rem;
+		padding-inline: 0.2rem;
+		font-family: var(--font-display);
+		font-size: 1.05rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
+	}
+
+	.source:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
+	}
+
 	.go {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		margin-top: 0.4rem;
 		font-family: var(--font-display);
 		font-size: 1.15rem;
 		font-weight: 600;

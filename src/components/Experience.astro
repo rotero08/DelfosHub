@@ -15,7 +15,7 @@ const xp = await getExperience();
 ---
 
 <section class="section wrap" id="experience">
-	<SectionHead no={no} title={t.nav.experience} hint={xp.note[lang]} />
+	<SectionHead lang={lang} section="experience" no={no} title={t.nav.experience} hint={xp.note[lang]} />
 
 	<div class="cols">
 		<div>
@@ -25,6 +25,7 @@ const xp = await getExperience();
 					xp.timeline.map((step) => (
 						<li>
 							<span class="when">{step.when[lang]}</span>
+							<span class="stop" aria-hidden="true" />
 							<div>
 								<p class="role">{step.role[lang]}</p>
 								<p class="detail">{step.detail[lang]}</p>
@@ -67,7 +68,12 @@ const xp = await getExperience();
 					{
 						xp.languages.map((l) => (
 							<li>
-								<span>{l.name[lang]}</span>
+								<span class="lname">{l.name[lang]}</span>
+								<span class="pips" role="img" aria-label={t.rank.replace('{n}', String(l.rank))}>
+									{[1, 2, 3, 4, 5].map((n) => (
+										<span class:list={['pip', { on: n <= l.rank }]} />
+									))}
+								</span>
 								<span class="level">{l.level[lang]}</span>
 							</li>
 						))
@@ -88,18 +94,47 @@ const xp = await getExperience();
 		margin-bottom: 0.9rem;
 	}
 
-	/* ---------- Path ---------- */
+	/* ---------- Path: a road with a stop for each step ---------- */
 	.path {
 		display: grid;
-		border-top: 1px solid var(--line);
 	}
 
 	.path li {
 		display: grid;
-		grid-template-columns: 5.2rem 1fr;
-		gap: 1rem;
-		padding-block: 1rem;
-		border-bottom: 1px solid var(--line);
+		grid-template-columns: 5.2rem 1.4rem 1fr;
+		gap: 0.4rem 0.7rem;
+		padding-bottom: 1.5rem;
+	}
+
+	.path li:last-child {
+		padding-bottom: 0;
+	}
+
+	.stop {
+		position: relative;
+		align-self: stretch;
+		background: linear-gradient(var(--line), var(--line)) center top / 2px 100% no-repeat;
+	}
+
+	/* The road starts at the first stop and ends at the last. */
+	.path li:first-child .stop {
+		background-position: center 0.7rem;
+		background-size: 2px calc(100% - 0.7rem);
+	}
+
+	.path li:last-child .stop {
+		background-size: 2px 0.7rem;
+	}
+
+	.stop::before {
+		content: '';
+		position: absolute;
+		top: 0.4rem;
+		left: 50%;
+		width: 0.8rem;
+		height: 0.8rem;
+		background: var(--mana);
+		transform: translateX(-50%) rotate(45deg);
 	}
 
 	.when {
@@ -134,6 +169,8 @@ const xp = await getExperience();
 	}
 
 	.focus {
+		padding-left: 1rem;
+		border-left: 3px solid var(--mana);
 		font-size: 1.2rem;
 		font-weight: 500;
 		line-height: 1.4;
@@ -164,16 +201,34 @@ const xp = await getExperience();
 	}
 
 	.langs {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem 1.75rem;
+		display: grid;
+		gap: 0.35rem;
+		max-width: 22rem;
 	}
 
 	.langs li {
-		display: flex;
-		align-items: baseline;
-		gap: 0.5rem;
+		display: grid;
+		grid-template-columns: 6.9rem auto 1fr;
+		align-items: center;
+		gap: 0.9rem;
 		font-weight: 600;
+	}
+
+	/* Five diamonds: filled up to the level. */
+	.pips {
+		display: inline-flex;
+		gap: 0.28rem;
+	}
+
+	.pip {
+		width: 0.72rem;
+		height: 0.72rem;
+		background: var(--line);
+		clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+	}
+
+	.pip.on {
+		background: var(--mana);
 	}
 
 	.level {

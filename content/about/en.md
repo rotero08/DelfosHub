@@ -4,6 +4,16 @@
 contact: There is no public inbox here yet. If we have already talked, use that channel.
 contactUrl: ""
 contactLabel: ""
+# The guild card beside the text. Keep it to what the text already says.
+card:
+  - label: Name
+    value: DelfosT, a pen name
+  - label: Class
+    value: Computer engineering student
+  - label: Side quests
+    value: Japanese, piano, drawing
+  - label: Languages
+    value: Spanish, English, Japanese
 ---
 
 I'm DelfosT. I study computer engineering, I lived in Japan for a while and have been studying Japanese for years, and I'm teaching myself piano and drawing along the way.

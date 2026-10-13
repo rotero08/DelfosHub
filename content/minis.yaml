@@ -4,12 +4,13 @@
 #   id      short lowercase name, used in analytics (mini:<id>)
 #   stack   two to four technologies, shown as small tags
 #   url     optional public address (a store page, a live demo). Makes the tile a link.
-#   repo    optional source-code address. It is only shown when showRepoLinks is turned on
-#           in site.config.mjs, and then only for tiles that have no `url`.
+#   repo    optional. The name of the source repository (the name only, never an address).
+#           A "Source" link appears only in builds where HUB_GITHUB_OWNER is set.
 #   status  optional short label, for example where it is published
 
 - id: nihongo-auto-tracker
   name: NihongoAutoTracker
+  repo: NihongoAutoTracker
   url: https://addons.mozilla.org/firefox/addon/nihongoautotracker/
   stack: [TypeScript, Svelte, Web APIs]
   status:
@@ -25,25 +26,39 @@
 
 - id: geodesic-mapper
   name: Geodesic Mapper
-  stack: [JavaScript, D3]
+  repo: GeodesicMapper
+  stack: [JavaScript, Vite, D3]
   description:
     en: >-
-      An interactive globe that morphs between 15 map projections and draws the shortest
-      path next to the constant-bearing one.
+      An interactive globe that morphs into 14 map projections and draws the shortest
+      path next to the constant-bearing one. Works with touch.
     es: >-
-      Un globo interactivo que se transforma entre 15 proyecciones y dibuja la ruta más
-      corta junto a la de rumbo constante.
+      Un globo interactivo que se transforma en 14 proyecciones y dibuja la ruta más
+      corta junto a la de rumbo constante. Funciona con táctil.
 
 - id: videosubs-whisper
   name: videosubs_whisper
+  repo: videosubs_whisper
   stack: [Python, Whisper, FFmpeg]
   description:
     en: >-
-      Batch pipeline that turns whole folders of video into subtitles in several
-      languages, from speech recognition to the final muxed file.
+      Turns whole folders of video into subtitles in many languages, all on your own
+      machine: speech recognition, translation and the final muxed file.
     es: >-
-      Proceso por lotes que convierte carpetas enteras de video en subtítulos en varios
-      idiomas, del reconocimiento de voz al archivo final.
+      Convierte carpetas enteras de video en subtítulos en muchos idiomas, todo en tu
+      propio equipo: reconocimiento de voz, traducción y el archivo final.
+
+- id: jimaku-subs-stremio
+  name: Jimaku Subtitles for Stremio
+  repo: jimaku-subs-stremiov2
+  stack: [Node.js, Stremio, ASS]
+  description:
+    en: >-
+      A Stremio addon that finds Japanese subtitles from the Jimaku community and turns
+      the styled ones into plain SRT on the fly. No dependencies.
+    es: >-
+      Un addon de Stremio que encuentra subtítulos en japonés de la comunidad Jimaku y
+      convierte los que tienen estilos en SRT sencillo al vuelo. Sin dependencias.
 
 - id: voice-spectrum
   name: Voice Spectral Analyzer
@@ -58,13 +73,15 @@
 
 - id: math-music
   name:
-    en: Maths and music explorer
-    es: Explorador de música y matemáticas
-  stack: [React, D3]
+    en: Symmetry & Sonority
+    es: Simetría y Sonoridad
+  repo: SimetriaySonoridad
+  stack: [React, Web Audio, SVG]
   description:
     en: >-
-      Interactive visualisations of the mathematics behind musical ideas, built as
-      teaching material for a course.
+      An interactive explorer of pitch-class sets: transpose, invert, walk triads around
+      the Tonnetz and see the symmetry, with a piano that sounds in the browser.
     es: >-
-      Visualizaciones interactivas de las matemáticas detrás de las ideas musicales,
-      hechas como material para un curso.
+      Un explorador interactivo de conjuntos de clases de altura: transpón, invierte,
+      recorre tríadas por el Tonnetz y mira la simetría, con un piano que suena en el
+      navegador.

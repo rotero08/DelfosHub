@@ -85,15 +85,18 @@ languages:
     level:
       en: native
       es: nativo
+    rank: 5
   - name:
       en: English
       es: Inglés
     level:
       en: advanced
       es: avanzado
+    rank: 4
   - name:
       en: Japanese
       es: Japonés
     level:
       en: advanced
       es: avanzado
+    rank: 4

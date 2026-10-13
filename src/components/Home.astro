@@ -25,11 +25,33 @@ const counts = { projects: projects.length, writing: posts.length, minis: minis.
 	<Header lang={lang} counts={counts} overHero />
 	<main id="main">
 		<Hero lang={lang} counts={counts} colors={projects.map((p) => p.color)} />
-		<Projects lang={lang} no={1} />
-		<Writing lang={lang} no={2} />
-		<Minis lang={lang} no={3} />
-		<Experience lang={lang} no={4} />
-		<About lang={lang} no={5} />
+		<div class="descent">
+			<Projects lang={lang} no={1} />
+			<Writing lang={lang} no={2} />
+			<Minis lang={lang} no={3} />
+			<Experience lang={lang} no={4} />
+			<About lang={lang} no={5} />
+		</div>
 	</main>
 	<Footer lang={lang} />
 </Base>
+
+<style>
+	/* Below the surface the page is a descent: the background darkens (or, by day, warms) as you
+	   go down, and a dashed rail runs beside the sections with one stop at each heading. */
+	.descent {
+		position: relative;
+		background: linear-gradient(var(--bg), var(--bg-deep));
+	}
+
+	.descent::before {
+		content: '';
+		position: absolute;
+		top: 4.5rem;
+		bottom: 7rem;
+		left: calc(50% - min(50% - var(--gutter), var(--wrap) / 2) - var(--rail));
+		width: 2px;
+		background: repeating-linear-gradient(var(--line) 0 7px, transparent 7px 14px);
+		transform: translateX(-50%);
+	}
+</style>

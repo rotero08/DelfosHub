@@ -1,5 +1,7 @@
 ---
-// Mini projects: a compact grid. A tile is a link only when it has somewhere public to go.
+// Mini projects, as small spells: a compact grid of cards, each with a sigil of its own. A card is a
+// link only when it has somewhere public to go; its source is a separate link, shown only when the
+// build allows it (see `github` in site.config.mjs).
 import SectionHead from './SectionHead.astro';
 import { getMinis } from '../lib/content';
 import { ui, type Locale } from '../i18n/ui';
@@ -12,17 +14,41 @@ interface Props {
 const { lang, no } = Astro.props;
 const t = ui[lang];
 const minis = await getMinis();
+const sigils = ['sigil-a', 'sigil-b', 'sigil-c'];
 ---
 
 <section class="section wrap" id="minis">
-	<SectionHead no={no} title={t.nav.minis} hint={t.hint.minis} />
+	<SectionHead lang={lang} section="minis" no={no} title={t.nav.minis} hint={t.hint.minis} />
+
+	<svg class="defs" width="0" height="0" aria-hidden="true" focusable="false">
+		<defs>
+			<symbol id="sigil-a" viewBox="-20 -20 40 40">
+				<circle r="16"></circle>
+				<polygon points="0,-12 10.4,6 -10.4,6"></polygon>
+				<circle r="3.5"></circle>
+			</symbol>
+			<symbol id="sigil-b" viewBox="-20 -20 40 40">
+				<circle r="16"></circle>
+				<polygon points="0,-12 12,0 0,12 -12,0"></polygon>
+				<path d="M-12 0H12M0-12V12"></path>
+			</symbol>
+			<symbol id="sigil-c" viewBox="-20 -20 40 40">
+				<circle r="16"></circle>
+				<polygon points="0,-12 10.4,-6 10.4,6 0,12 -10.4,6 -10.4,-6"></polygon>
+				<circle r="2"></circle>
+			</symbol>
+		</defs>
+	</svg>
 
 	<ul class="tiles">
 		{
-			minis.map((mini) => {
+			minis.map((mini, i) => {
 				const name = typeof mini.name === 'string' ? mini.name : mini.name[lang];
 				return (
 					<li class:list={['tile', { linked: mini.href }]}>
+						<svg class="sigil" viewBox="-20 -20 40 40" aria-hidden="true">
+							<use href={`#${sigils[i % sigils.length]}`} x="-20" y="-20" width="40" height="40" transform={`rotate(${i * 27})`} />
+						</svg>
 						<h3>
 							{mini.href ? (
 								<a href={mini.href} data-track={`mini:${mini.id}`}>
@@ -33,15 +59,25 @@ const minis = await getMinis();
 							)}
 						</h3>
 						<p class="text">{mini.description[lang]}</p>
-						<ul class="tags">
-							{mini.status && <li class="tag status">{mini.status[lang]}</li>}
-							{mini.stack.map((item) => (
-								<li class="tag">{item}</li>
-							))}
-						</ul>
+						<div class="foot">
+							<ul class="tags">
+								{mini.status && <li class="tag status">{mini.status[lang]}</li>}
+								{mini.stack.map((item) => (
+									<li class="tag">{item}</li>
+								))}
+							</ul>
+							{mini.repoUrl && (
+								<a class="source" href={mini.repoUrl} data-track={`repo:${mini.id}`}>
+									{t.source}
+									<svg class="arrow" viewBox="0 0 16 16" aria-hidden="true">
+										<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
+									</svg>
+								</a>
+							)}
+						</div>
 						{mini.href && (
 							<p class="go" aria-hidden="true">
-								{mini.isRepo ? t.source : t.open}
+								{t.open}
 								<svg class="arrow" viewBox="0 0 16 16">
 									<path d="M3 13 13 3M5 3h8v8" fill="none" stroke="currentColor" stroke-width="2.2" />
 								</svg>
@@ -55,6 +91,10 @@ const minis = await getMinis();
 </section>
 
 <style>
+	.defs {
+		position: absolute;
+	}
+
 	.tiles {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
@@ -66,6 +106,7 @@ const minis = await getMinis();
 
 	.tile {
 		position: relative;
+		isolation: isolate;
 		display: grid;
 		grid-template-rows: auto 1fr auto;
 		gap: 0.7rem;
@@ -74,6 +115,21 @@ const minis = await getMinis();
 		transition:
 			background-color 0.12s,
 			color 0.12s;
+	}
+
+	/* The sigil: a small circle of linework behind the card, turning a little when you point at it. */
+	.sigil {
+		position: absolute;
+		right: 0.7rem;
+		bottom: 0.4rem;
+		z-index: -1;
+		width: 5.2rem;
+		height: 5.2rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 0.7;
+		opacity: 0.13;
+		pointer-events: none;
 	}
 
 	h3 {
@@ -99,7 +155,7 @@ const minis = await getMinis();
 		outline: none;
 	}
 
-	.tile:has(a:focus-visible) {
+	.tile:has(h3 a:focus-visible) {
 		outline: 3px solid var(--accent);
 		outline-offset: -3px;
 	}
@@ -111,6 +167,14 @@ const minis = await getMinis();
 		text-wrap: pretty;
 	}
 
+	.foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.2rem 0.8rem;
+	}
+
 	.tags {
 		display: flex;
 		flex-wrap: wrap;
@@ -120,6 +184,31 @@ const minis = await getMinis();
 	.status {
 		border-color: var(--accent);
 		color: var(--text);
+	}
+
+	/* The source link sits above the card's stretched link, with a full-size touch target. */
+	.source {
+		position: relative;
+		z-index: 2;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		min-height: 2.75rem;
+		padding-inline: 0.2rem;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.3em;
+	}
+
+	.source:focus-visible {
+		outline: 3px solid var(--accent);
+		outline-offset: 2px;
 	}
 
 	.go {
@@ -148,14 +237,26 @@ const minis = await getMinis();
 		color: var(--on-slab);
 	}
 
-	.linked:hover :is(.text, .tag, .go),
-	.linked:focus-within :is(.text, .tag, .go) {
+	.linked:hover :is(.text, .tag, .go, .source),
+	.linked:focus-within :is(.text, .tag, .go, .source) {
 		color: inherit;
 		border-color: currentColor;
+		text-decoration-color: currentColor;
 	}
 
 	.linked:hover .arrow,
 	.linked:focus-within .arrow {
 		transform: translate(3px, -3px);
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.sigil {
+			transition: transform 0.7s var(--snap);
+		}
+
+		.tile:hover .sigil,
+		.tile:focus-within .sigil {
+			transform: rotate(50deg) scale(1.08);
+		}
 	}
 </style>

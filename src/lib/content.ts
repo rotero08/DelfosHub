@@ -5,17 +5,27 @@ import type { Locale } from '../i18n/ui';
 const inOrder = <T extends { data: { order: number } }>(entries: T[]) =>
 	entries.sort((a, b) => a.data.order - b.data.order);
 
+// The account behind the source links. It comes from the environment, never from the repository.
+if (site.github.owner && !/^[A-Za-z0-9-]{1,39}$/.test(site.github.owner)) {
+	throw new Error('HUB_GITHUB_OWNER is not a valid account name.');
+}
+const repoUrl = (repo?: string) => (repo && site.github.owner ? `https://github.com/${site.github.owner}/${repo}` : undefined);
+
 export async function getProjects() {
-	return inOrder(await getCollection('projects')).map((entry) => ({ id: entry.id, ...entry.data }));
+	return inOrder(await getCollection('projects')).map((entry) => ({
+		id: entry.id,
+		...entry.data,
+		repoUrl: repoUrl(entry.data.repo),
+	}));
 }
 
 export async function getMinis() {
 	return inOrder(await getCollection('minis')).map(({ id, data }) => ({
 		id,
 		...data,
-		// A tile links to its public address, or to its source only when that is allowed.
-		href: data.url ?? (site.privacy.showRepoLinks ? data.repo : undefined),
-		isRepo: !data.url && site.privacy.showRepoLinks && Boolean(data.repo),
+		// A tile links to its public address when it has one; its source is a separate link.
+		href: data.url,
+		repoUrl: repoUrl(data.repo),
 	}));
 }
 

@@ -1,7 +1,7 @@
 ---
 // The bar across the top, plus the full-screen menu it opens on small screens.
 import Menu from './Menu.astro';
-import { homeOf, sections, ui, type Locale, type Section } from '../i18n/ui';
+import { bottom, homeOf, sections, ui, type Locale, type Section } from '../i18n/ui';
 
 interface Props {
 	lang: Locale;
@@ -35,6 +35,12 @@ const short: Partial<Record<Section, string>> = t.navShort;
 		</nav>
 
 		<div class="tools">
+			{/* The meter is a game of the page: it counts how deep the scroll has gone. */}
+			<p class="depth" aria-hidden="true">
+				<span class="depth-label">{t.depth}</span>
+				<span class="depth-n" data-depth data-bottom={bottom}>0</span>
+				<span class="depth-unit">m</span>
+			</p>
 			<a
 				class="tool lang"
 				href={homeOf(other)}
@@ -127,6 +133,41 @@ const short: Partial<Record<Section, string>> = t.navShort;
 	.links a:focus-visible {
 		background: var(--slab);
 		color: var(--on-slab);
+	}
+
+	/* The section you are reading is marked: a small diamond of mana under its name. */
+	.links a[aria-current='location'] {
+		color: var(--text);
+		background: linear-gradient(var(--mana), var(--mana)) center bottom / 0.9rem 3px no-repeat;
+	}
+
+	.links a[aria-current='location']:hover,
+	.links a[aria-current='location']:focus-visible {
+		background-color: var(--slab);
+		background-image: none;
+	}
+
+	.depth {
+		display: none;
+		align-items: baseline;
+		gap: 0.35rem;
+		margin-right: 0.6rem;
+		font-family: var(--font-display);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.depth-n {
+		min-width: 3.6ch;
+		font-size: 1.35rem;
+		font-style: italic;
+		font-weight: 800;
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+		color: var(--mana);
 	}
 
 	.tools {
@@ -260,6 +301,12 @@ const short: Partial<Record<Section, string>> = t.navShort;
 
 		.tools {
 			margin-left: auto;
+		}
+	}
+
+	@media (min-width: 72rem) {
+		.depth {
+			display: flex;
 		}
 	}
 

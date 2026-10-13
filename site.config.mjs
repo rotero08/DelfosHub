@@ -12,11 +12,14 @@ export default {
 	// How many entries the Writing section shows.
 	writingLimit: 6,
 
-	privacy: {
-		// Mini projects can carry a `repo:` address in content/minis.yaml. While this is false
-		// those addresses are never rendered, because a code-hosting profile can reveal more
-		// than the pseudonym does. Turn it on once the profile behind them is safe to show.
-		showRepoLinks: false,
+	// Links to the source code of projects. Content names only the repository (`repo:` in
+	// projects.yaml and minis.yaml); the account is never written in this repository, because a
+	// code-hosting account can reveal more than the pseudonym does. A build shows the links only
+	// when the environment variable HUB_GITHUB_OWNER is set: in the build settings on Cloudflare
+	// to publish them, or in the shell for a local look. Unset, no link to a code-hosting site
+	// exists anywhere in the output, and `pnpm check` verifies that.
+	github: {
+		owner: process.env.HUB_GITHUB_OWNER ?? '',
 	},
 
 	// Both stay empty until the Cloudflare stage. While they are empty the site ships no

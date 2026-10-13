@@ -6,6 +6,8 @@
 #   color     the project's own colour, as a hex code. It is only ever used as a fill with
 #             dark text on top, so it has to be bright; the build stops if it is too dark.
 #   language  the language the project itself is written in (en, es, ja)
+#   repo      optional. The name of the project's source repository (the name only, never an
+#             address). A "Source" link appears only in builds where HUB_GITHUB_OWNER is set.
 #   feed      optional. Lets `pnpm sync` pull the project's newest posts into Writing.
 #               type: rss      url: address of an RSS or Atom feed
 #               type: sitemap  url: address of a sitemap, match: pattern of post addresses,
@@ -17,6 +19,7 @@
   url: https://hibi-blog.delfost.workers.dev/
   color: "#ff5c3e"
   language: es
+  repo: hibiblog
   kind:
     en: Blog and guides
     es: Blog y guías
@@ -44,6 +47,7 @@
   url: https://piano-guide.delfost.workers.dev/
   color: "#e9c558"
   language: en
+  repo: PianoGuide
   kind:
     en: Self-study guide
     es: Guía de autoestudio

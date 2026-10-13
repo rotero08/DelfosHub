@@ -8,6 +8,8 @@ import { contrast, INK } from './lib/color';
 const text = z.object({ en: z.string().min(1), es: z.string().min(1) });
 const lang = z.enum(['en', 'es', 'ja']);
 const web = z.url({ protocol: /^https$/ });
+// A repository's name, never its address: the account it lives under comes from the build environment.
+const repoName = z.string().regex(/^[A-Za-z0-9._-]{1,100}$/, 'Give only the repository name, such as "my-project", not an address.');
 
 /** A YAML or JSON list. Entries keep their file order and get their id from `idOf`. */
 function list(path: string, idOf: (entry: Record<string, unknown>) => unknown) {
@@ -37,6 +39,7 @@ const projects = defineCollection({
 		language: lang,
 		kind: text,
 		description: text,
+		repo: repoName.optional(),
 		facts: z.array(text).max(4).default([]),
 		feed: z
 			.object({
@@ -58,7 +61,7 @@ const minis = defineCollection({
 		stack: z.array(z.string()).max(4).default([]),
 		status: text.optional(),
 		url: web.optional(),
-		repo: web.optional(),
+		repo: repoName.optional(),
 	}),
 });
 
@@ -92,7 +95,8 @@ const experience = defineCollection({
 		focus: text,
 		timeline: z.array(z.object({ when: text, role: text, detail: text })),
 		skills: z.array(z.object({ name: text, items: z.array(z.string()) })),
-		languages: z.array(z.object({ name: text, level: text })),
+		// `rank` (1 to 5) fills the pips beside a language.
+		languages: z.array(z.object({ name: text, level: text, rank: z.number().int().min(1).max(5) })),
 	}),
 });
 
@@ -102,6 +106,8 @@ const about = defineCollection({
 		contact: z.string().optional(),
 		contactUrl: z.union([z.literal(''), z.string().regex(/^(https:\/\/|mailto:)/)]).optional(),
 		contactLabel: z.string().optional(),
+		// The lines of the guild card, in this language. Keep them to what the page already says.
+		card: z.array(z.object({ label: z.string(), value: z.string() })).max(6).default([]),
 	}),
 });
 
