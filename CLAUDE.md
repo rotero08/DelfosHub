@@ -114,8 +114,8 @@ brings, and say so.
 
 **Analytics hooks.** Links and buttons carry `data-track="<kind>:<id>"` (`project:hibi`,
 `post:/path/`, `mini:<id>`, `repo:<id>`, `nav:<section>`, `menu-hero:<section>`, `lang:es`,
-`theme`). Keep the attribute on anything new that can be clicked. Nothing is sent until an
-endpoint is configured.
+`theme`). Keep the attribute on anything new that can be clicked. Nothing is sent until Umami is
+switched on (see Status); its event names are cut to 50 characters.
 
 **Motion and keys.** Anything that moves sits inside `prefers-reduced-motion: no-preference` or is
 neutralised by the global reduce rule. The menus move with the arrow keys, but only while focus is
@@ -157,9 +157,11 @@ identity, written after the first history was deleted.
 
 **Deliberately not done yet** (the owner asked to hold these for a later session):
 
-- **Analytics.** Planned as two free, cookie-less parts: Cloudflare Web Analytics for visits,
-  referrers and pages (set `analytics.cloudflareBeaconToken`), and a small first-party endpoint
-  that records click events (set `analytics.clickEndpoint`). The endpoint is the only thing that
-  would run Worker code. Both settings already adjust the security policy and the footer note.
+- **Analytics.** Umami Cloud, the service the first hub used: cookie-free page views, and a click
+  event for everything marked `data-track`. It is built and dormant: paste the website ID from the
+  Umami dashboard into `analytics.umami.websiteId` in `site.config.mjs` to switch it on (the first
+  hub's ID was not kept anywhere on the machine). Switching it on adds the tracker, allows exactly
+  its two hosts in the security policy and changes the footer note; the tracker honours Do Not
+  Track. Nothing is collected before that.
 - **Contact.** The owner chose to show no contact details for now. `content/about/*.md` accepts a
   `contactUrl` when that changes.

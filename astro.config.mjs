@@ -8,8 +8,9 @@ import { themeScriptHash } from './src/lib/theme-script.mjs';
 const localFonts = fontProviders.local();
 const font = (file) => `./src/assets/fonts/${file}.woff2`;
 
-// Analytics hosts are only allowed once analytics are switched on in site.config.mjs.
-const beacon = Boolean(site.analytics.cloudflareBeaconToken);
+// Umami's hosts are only allowed once analytics are switched on in site.config.mjs.
+const umami = site.analytics.umami;
+const counting = Boolean(umami.websiteId);
 
 export default defineConfig({
 	site: site.url,
@@ -69,14 +70,14 @@ export default defineConfig({
 				"default-src 'none'",
 				"img-src 'self' data:",
 				"font-src 'self'",
-				`connect-src 'self'${beacon ? ' https://cloudflareinsights.com' : ''}`,
+				`connect-src 'self'${counting ? ` ${new URL(umami.host).origin}` : ''}`,
 				"manifest-src 'self'",
 				"base-uri 'none'",
 				"form-action 'none'",
 			],
 			scriptDirective: {
 				hashes: [themeScriptHash],
-				resources: ["'self'", ...(beacon ? ['https://static.cloudflareinsights.com'] : [])],
+				resources: ["'self'", ...(counting ? [new URL(umami.script).origin] : [])],
 			},
 		},
 	},

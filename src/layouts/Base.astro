@@ -21,7 +21,8 @@ const description = Astro.props.description ?? t.description;
 const absolute = (path: string) => new URL(path, Astro.site).href;
 const canonical = absolute(homeOf(lang));
 const preview = absolute('/og.png');
-const { clickEndpoint, cloudflareBeaconToken } = site.analytics;
+const { umami } = site.analytics;
+const counting = Boolean(umami.websiteId);
 const ogLocale = { en: 'en_US', es: 'es_ES' };
 
 const jsonLd = {
@@ -36,7 +37,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang={lang} data-clicks={clickEndpoint || undefined}>
+<html lang={lang} data-counting={counting ? 'on' : undefined}>
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -82,13 +83,8 @@ const jsonLd = {
 
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 		{
-			cloudflareBeaconToken && (
-				<script
-					is:inline
-					defer
-					src="https://static.cloudflareinsights.com/beacon.min.js"
-					data-cf-beacon={JSON.stringify({ token: cloudflareBeaconToken })}
-				/>
+			counting && (
+				<script is:inline defer src={umami.script} data-website-id={umami.websiteId} data-host-url={umami.host} data-do-not-track="true" />
 			)
 		}
 	</head>
@@ -162,21 +158,15 @@ const jsonLd = {
 		for (const section of document.querySelectorAll('main section[id]')) spy.observe(section);
 	}
 
-	// Click counting. Dormant until an endpoint is set in site.config.mjs. It sends which
-	// marked element was used and where it led, and nothing about the visitor.
-	const endpoint = root.dataset.clicks;
-	if (endpoint) {
+	// Click counting. Dormant until Umami is switched on in site.config.mjs (the page is then marked
+	// data-counting and the tracker is on it). Umami is told which marked element was used and where it
+	// led, and nothing about the visitor. Its event names are limited to 50 characters.
+	if (root.dataset.counting) {
 		const report = (event: Event) => {
 			const el = (event.target as Element).closest<HTMLElement>('[data-track]');
-			if (!el) return;
-			navigator.sendBeacon(
-				endpoint,
-				JSON.stringify({
-					id: el.dataset.track,
-					to: el instanceof HTMLAnchorElement ? el.href : '',
-					page: location.pathname,
-				}),
-			);
+			const umami = (window as unknown as { umami?: { track: (name: string, data?: object) => void } }).umami;
+			if (!el?.dataset.track || !umami) return;
+			umami.track(el.dataset.track.slice(0, 50), { to: el instanceof HTMLAnchorElement ? el.href : '' });
 		};
 		addEventListener('click', report, { capture: true });
 		addEventListener('auxclick', report, { capture: true });

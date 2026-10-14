@@ -21,12 +21,16 @@ export default {
 		owner: 'rotero08',
 	},
 
-	// Both stay empty until the Cloudflare stage. While they are empty the site ships no
-	// analytics code at all.
+	// Analytics: Umami Cloud, which counts page views and clicks without cookies and without
+	// following anyone around. Paste the website ID from the Umami dashboard (Websites, the site,
+	// Edit) into `websiteId` to switch it on. While it is empty the page carries no tracker and
+	// makes no request to anyone. `script` and `host` are Umami Cloud's addresses: where the
+	// tracker comes from and where it reports (the security policy allows exactly these two).
 	analytics: {
-		// Path of the endpoint that receives click events, for example '/e'.
-		clickEndpoint: '',
-		// Token of the Cloudflare Web Analytics beacon (page views, referrers, Web Vitals).
-		cloudflareBeaconToken: '',
+		umami: {
+			websiteId: '',
+			script: 'https://cloud.umami.is/script.js',
+			host: 'https://gateway.umami.is',
+		},
 	},
 };

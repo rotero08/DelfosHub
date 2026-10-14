@@ -9,7 +9,7 @@ interface Props {
 const { lang } = Astro.props;
 const t = ui[lang];
 const other: Locale = lang === 'en' ? 'es' : 'en';
-const counting = Boolean(site.analytics.clickEndpoint || site.analytics.cloudflareBeaconToken);
+const counting = Boolean(site.analytics.umami.websiteId);
 ---
 
 <footer class="foot">

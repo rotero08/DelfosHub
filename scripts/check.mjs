@@ -116,7 +116,7 @@ if (!staged) {
 	} else {
 		const built = walk(dist);
 		const allowed = new Set([new URL(site.url).host]);
-		if (site.analytics.cloudflareBeaconToken) allowed.add('static.cloudflareinsights.com');
+		if (site.analytics.umami.websiteId) allowed.add(new URL(site.analytics.umami.script).host);
 
 		for (const file of built.filter((f) => f.endsWith('.html'))) {
 			const html = readFileSync(file, 'utf8');
