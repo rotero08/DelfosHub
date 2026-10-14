@@ -12,14 +12,13 @@ export default {
 	// How many entries the Writing section shows.
 	writingLimit: 6,
 
-	// Links to the source code of projects. Content names only the repository (`repo:` in
-	// projects.yaml and minis.yaml); the account is never written in this repository, because a
-	// code-hosting account can reveal more than the pseudonym does. A build shows the links only
-	// when the environment variable HUB_GITHUB_OWNER is set: in the build settings on Cloudflare
-	// to publish them, or in the shell for a local look. Unset, no link to a code-hosting site
-	// exists anywhere in the output, and `pnpm check` verifies that.
+	// The GitHub account that hosts the code. Content names only a repository (`repo:` in
+	// projects.yaml and minis.yaml) and the "Source" links are built from this account and that
+	// name. The account is public on purpose (the owner chose to show it); the other private
+	// terms still apply, and `pnpm check` does not hold the account's own name against a file.
+	// Leave it empty to build a site with no link to a code-hosting site at all.
 	github: {
-		owner: process.env.HUB_GITHUB_OWNER ?? '',
+		owner: 'rotero08',
 	},
 
 	// Both stay empty until the Cloudflare stage. While they are empty the site ships no

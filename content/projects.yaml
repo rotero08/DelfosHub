@@ -6,8 +6,9 @@
 #   color     the project's own colour, as a hex code. It is only ever used as a fill with
 #             dark text on top, so it has to be bright; the build stops if it is too dark.
 #   language  the language the project itself is written in (en, es, ja)
-#   repo      optional. The name of the project's source repository (the name only, never an
-#             address). A "Source" link appears only in builds where HUB_GITHUB_OWNER is set.
+#   repo      optional. The name of the project's source repository on the GitHub account in
+#             site.config.mjs (the name only, never an address). It makes a "Source" link;
+#             check that the repository is public first, or the link leads nowhere.
 #   preview   optional. A picture of the project's site, shown in its card: put a 1280 x 640
 #             image at src/assets/previews/<id>.webp and say what it shows in `alt`. Take it
 #             from the live site and look at it first: nothing personal may be in the frame.

@@ -5,9 +5,9 @@ import type { Locale } from '../i18n/ui';
 const inOrder = <T extends { data: { order: number } }>(entries: T[]) =>
 	entries.sort((a, b) => a.data.order - b.data.order);
 
-// The account behind the source links. It comes from the environment, never from the repository.
+// The account behind the source links (site.config.mjs).
 if (site.github.owner && !/^[A-Za-z0-9-]{1,39}$/.test(site.github.owner)) {
-	throw new Error('HUB_GITHUB_OWNER is not a valid account name.');
+	throw new Error('github.owner in site.config.mjs is not a valid account name.');
 }
 const repoUrl = (repo?: string) => (repo && site.github.owner ? `https://github.com/${site.github.owner}/${repo}` : undefined);
 

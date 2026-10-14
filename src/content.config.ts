@@ -8,7 +8,7 @@ import { contrast, INK } from './lib/color';
 const text = z.object({ en: z.string().min(1), es: z.string().min(1) });
 const lang = z.enum(['en', 'es', 'ja']);
 const web = z.url({ protocol: /^https$/ });
-// A repository's name, never its address: the account it lives under comes from the build environment.
+// A repository's name, never its address: the account it lives under is `github.owner` in site.config.mjs.
 const repoName = z.string().regex(/^[A-Za-z0-9._-]{1,100}$/, 'Give only the repository name, such as "my-project", not an address.');
 
 /** A YAML or JSON list. Entries keep their file order and get their id from `idOf`. */

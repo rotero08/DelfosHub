@@ -31,10 +31,10 @@ Each file starts with a comment that explains its fields. Read it before editing
 2. **The pseudonym rule** (see CLAUDE.md). No real names, employers, schools, cities, countries
    or personal handles. Describe experience by kind ("a fintech startup"), never by name. If the
    owner pastes identifying detail, anonymise it and say what you left out and why.
-3. **Source links**: give only the repository's name in `repo:` (never an address, never the
-   account). The "Source" link appears only in builds where the owner has set `HUB_GITHUB_OWNER`;
-   without it no code-hosting link exists in the output. Leave `repo:` out when the repository's
-   name could point to a school or a course. Link a tile's own page through `url` only when there
+3. **Source links**: give only the repository's name in `repo:` (never an address). The "Source"
+   link is built from the GitHub account in `site.config.mjs`, which the owner has chosen to
+   publish. Check that the repository is public first (a link to a private one leads nowhere), and
+   leave `repo:` out when its name could point to a school or a course. Link a tile's own page through `url` only when there
    is a public page that is safe to show (a store listing, a live demo). A tile without a link is fine.
 4. **A new project needs a colour and a glyph.** Pick a bright colour that no other project
    uses; it is only ever a fill under dark text. The build stops if it is too dark. The glyph is

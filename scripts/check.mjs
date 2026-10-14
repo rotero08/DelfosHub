@@ -55,10 +55,6 @@ const files = staged
 			.filter(existsSync)
 	: walk(root);
 
-if (site.github.owner) {
-	warnings.push('HUB_GITHUB_OWNER is set: this build contains source links, so the private-terms scan of dist/ may flag the account name');
-}
-
 // ---------- 1. Private terms ----------
 const termsFile = process.env.HUB_PRIVATE_TERMS ?? join(homedir(), '.config/delfost-hub/private-terms.txt');
 if (existsSync(termsFile)) {
@@ -74,8 +70,12 @@ if (existsSync(termsFile)) {
 		}))
 		.filter((term) => term.needle);
 
+	// The GitHub account is public on purpose (site.config.mjs), so its own name is not held against a
+	// file: a private term that happens to sit inside it is still found wherever it appears outside it.
+	const publicNames = [site.github.owner].filter(Boolean).map((name) => name.toLowerCase());
 	const scan = (where, text) => {
-		const haystack = text.toLowerCase();
+		let haystack = text.toLowerCase();
+		for (const name of publicNames) haystack = haystack.split(name).join(' ');
 		for (const term of terms) {
 			if (haystack.includes(term.needle)) (term.soft ? warnings : errors).push(`${where}: contains ${term.label}`);
 		}
@@ -125,9 +125,9 @@ if (!staged) {
 			if (/<[^>]+\sstyle=/i.test(html)) errors.push(`${name}: has a style attribute, which the policy blocks`);
 			if (/<[^>]+\son[a-z]+=/i.test(html)) errors.push(`${name}: has an inline event handler, which the policy blocks`);
 			if (/target="_blank"(?![^>]*rel="[^"]*noopener)/i.test(html)) errors.push(`${name}: a new-tab link lacks rel="noopener"`);
-			// Source links exist only in builds made with HUB_GITHUB_OWNER (see site.config.mjs).
+			// Source links exist only while an account is set (see site.config.mjs).
 			if (!site.github.owner && /(?:github|gitlab|bitbucket|codeberg)\.(?:com|org)/i.test(html)) {
-				errors.push(`${name}: links to a code-hosting site although HUB_GITHUB_OWNER is not set`);
+				errors.push(`${name}: links to a code-hosting site although no GitHub account is set`);
 			}
 			// Anything the browser fetches on its own must come from this site.
 			for (const [, url] of html.matchAll(/<(?:script|img|source|iframe|link(?=[^>]*rel="(?:stylesheet|preload|icon|apple-touch-icon)"))[^>]*?(?:src|href)="(https?:\/\/[^"]+)"/gi)) {

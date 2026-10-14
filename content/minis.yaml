@@ -4,8 +4,9 @@
 #   id      short lowercase name, used in analytics (mini:<id>)
 #   stack   two to four technologies, shown as small tags
 #   url     optional public address (a store page, a live demo). Makes the tile a link.
-#   repo    optional. The name of the source repository (the name only, never an address).
-#           A "Source" link appears only in builds where HUB_GITHUB_OWNER is set.
+#   repo    optional. The name of the source repository on the GitHub account in site.config.mjs
+#           (the name only, never an address). It makes a "Source" link: check that the
+#           repository is public first, or the link leads nowhere.
 #   status  optional short label, for example where it is published
 
 - id: nihongo-auto-tracker
