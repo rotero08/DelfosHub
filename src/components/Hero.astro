@@ -26,28 +26,6 @@ const arms = [...colors.slice(0, 3), null].map((color, i) => {
 	return { color, points, turn: `rotate(${right ? -3 : 4} 60 ${y + 10})` };
 });
 
-// The seal over the moon: twenty-four ticks round the outer rings, as [x1, y1, x2, y2].
-const ticks = Array.from({ length: 24 }, (_, i) => {
-	const a = (i * Math.PI) / 12;
-	const inner = 91;
-	const outer = i % 2 ? 94.5 : 97;
-	return [inner * Math.cos(a), inner * Math.sin(a), outer * Math.cos(a), outer * Math.sin(a)].map((n) => +n.toFixed(2));
-});
-
-// The flower field along the ground, in the project colours and cream. A small seeded generator
-// keeps the field the same on every build. [x, y, size, colour or null for cream]
-let seed = 7;
-const next = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-const palette = [...colors.slice(0, 3), null];
-const flowers = Array.from({ length: 34 }, (_, i) => {
-	const y = 30 + next() * 26;
-	const size = 7 + ((y - 30) / 26) * 7;
-	return [+(8 + (i / 34) * 984 + (next() - 0.5) * 22).toFixed(1), +y.toFixed(1), +size.toFixed(1), palette[Math.floor(next() * palette.length)]] as const;
-}).sort((a, b) => a[1] - b[1]);
-
-// Petals and sparks of mana that drift up out of the field: [x, y, gold?]
-const motes = Array.from({ length: 12 }, (_, i) => [+(40 + i * 78 + next() * 40).toFixed(0), +(150 + next() * 120).toFixed(0), i % 3 === 0] as const);
-
 // Four-point sparkles in the strip of sky behind the scene: [x %, y %, size in px].
 const stars = [
 	[4, 12, 7],
@@ -79,12 +57,6 @@ const stars = [
 
 		<nav class="index" aria-label={t.indexLabel}>
 			<Menu lang={lang} where="hero" counts={counts} />
-			{/* The menu really works this way; the line only says so. */}
-			<p class="prompts" aria-hidden="true">
-				<span><kbd class="keycap">↑</kbd> <kbd class="keycap">↓</kbd> {t.keys.move}</span>
-				<span><kbd class="keycap">↵</kbd> {t.keys.open}</span>
-				<span><kbd class="keycap">1</kbd>–<kbd class="keycap">5</kbd> {t.keys.jump}</span>
-			</p>
 		</nav>
 	</div>
 
@@ -100,20 +72,6 @@ const stars = [
 			}
 		</svg>
 		<div class="orb"></div>
-		<svg class="seal" viewBox="-100 -100 200 200">
-			<g class="outer">
-				<circle r="98" class="ring-a"></circle>
-				<circle r="89" class="ring-a dashed"></circle>
-				{ticks.map(([x1, y1, x2, y2]) => <line class="ring-a" x1={x1} y1={y1} x2={x2} y2={y2}></line>)}
-			</g>
-			<g class="inner">
-				<circle r="62" class="ring-b"></circle>
-				<polygon class="ring-b" points="43.8,43.8 -43.8,43.8 -43.8,-43.8 43.8,-43.8"></polygon>
-				<polygon class="ring-b" points="62,0 0,62 -62,0 0,-62"></polygon>
-				<circle r="36" class="ring-b"></circle>
-				<circle r="3" class="dot"></circle>
-			</g>
-		</svg>
 		<svg class="ridges" viewBox="0 0 1000 100" preserveAspectRatio="none">
 			<polygon
 				class="far"
@@ -124,31 +82,6 @@ const stars = [
 				points="0,78 80,70 170,80 260,66 340,78 420,72 520,84 620,82 700,87 790,82 880,86 950,78 1000,74 1000,100 0,100"
 			></polygon>
 			<polygon class="ground" points="0,92 150,89 320,93 520,90 700,93 860,90 1000,92 1000,100 0,100"></polygon>
-		</svg>
-		<svg class="field" viewBox="0 0 1000 60" preserveAspectRatio="xMidYMax slice">
-			<defs>
-				<symbol id="flower" viewBox="-5 -5 10 15">
-					<path class="stem" d="M0 2V10"></path>
-					<g class="petals">
-						{[0, 72, 144, 216, 288].map((turn) => <ellipse cx="0" cy="-2.3" rx="1.6" ry="2.7" transform={`rotate(${turn})`}></ellipse>)}
-					</g>
-					<circle class="heart" r="1.15"></circle>
-				</symbol>
-			</defs>
-			{
-				flowers.map(([x, y, size, color]) => (
-					<use href="#flower" x={x - size / 2} y={y - size} width={size} height={size * 1.5} fill={color ?? undefined} class={color ? undefined : 'cream'}></use>
-				))
-			}
-		</svg>
-		<svg class="motes" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMax slice">
-			{
-				motes.map(([x, y, gold]) => (
-					<g transform={`translate(${x} ${y})`}>
-						<path class={gold ? 'mote gold' : 'mote'} d="M0-4.5Q3-1.5 0 4.5-3-1.5 0-4.5Z"></path>
-					</g>
-				))
-			}
 		</svg>
 		<svg class="post" viewBox="0 0 120 150">
 			<path class="pole" d="M56,150V14l4-8 4,8v136Z"></path>
@@ -180,7 +113,6 @@ const stars = [
 
 	.hero-in {
 		position: relative;
-		z-index: 1;
 		display: grid;
 		gap: 2rem;
 		align-content: center;
@@ -245,116 +177,6 @@ const stars = [
 		height: 100%;
 	}
 
-	/* A seal engraved over the moon: dark linework on the light disc, accent linework on the sky. */
-	.seal {
-		--seal: calc(var(--orb-size) * 1.4);
-
-		position: absolute;
-		right: calc(var(--orb-right) + var(--orb-size) * 0.5 - var(--seal) * 0.5);
-		bottom: calc(var(--scene) * 0.1 + var(--orb-size) * 0.5 - var(--seal) * 0.5);
-		width: var(--seal);
-		height: var(--seal);
-		fill: none;
-		pointer-events: none;
-	}
-
-	.ring-a {
-		stroke: var(--accent);
-		stroke-width: 0.7;
-		opacity: 0.55;
-	}
-
-	.ring-a.dashed {
-		stroke-dasharray: 1.2 4.2;
-		stroke-width: 1.1;
-	}
-
-	.ring-b {
-		stroke: var(--silhouette);
-		stroke-width: 0.7;
-		opacity: 0.3;
-	}
-
-	.dot {
-		fill: var(--silhouette);
-		opacity: 0.35;
-	}
-
-	.outer,
-	.inner {
-		transform-origin: center;
-	}
-
-	/* The flower field: blooms in the colours of the projects stand along the ground. */
-	.field {
-		position: absolute;
-		inset: auto 0 0;
-		width: 100%;
-		height: calc(var(--scene) * 0.32);
-		overflow: visible;
-	}
-
-	.field .stem {
-		fill: none;
-		stroke: var(--ridge-mid);
-		stroke-width: 0.5;
-	}
-
-	.field .petals {
-		fill: inherit;
-	}
-
-	.field .cream {
-		fill: var(--text);
-	}
-
-	.field .heart {
-		fill: var(--mana);
-	}
-
-	.motes {
-		position: absolute;
-		inset: auto 0 0;
-		width: 100%;
-		height: calc(var(--scene) * 1.1);
-		pointer-events: none;
-	}
-
-	.mote {
-		fill: var(--petal);
-		opacity: 0;
-		transform-box: fill-box;
-		transform-origin: center;
-	}
-
-	.mote.gold {
-		fill: var(--mana);
-	}
-
-	.prompts {
-		display: none;
-		gap: 1.4rem;
-		margin: 1.1rem 0.7rem 0;
-		font-family: var(--font-display);
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.prompts span {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.3rem;
-	}
-
-	@media (hover: hover) and (min-width: 62rem) {
-		.prompts {
-			display: flex;
-		}
-	}
-
 	.far {
 		fill: var(--ridge-far);
 	}
@@ -406,57 +228,6 @@ const stars = [
 		@keyframes rise {
 			from {
 				transform: translateY(35%);
-			}
-		}
-
-		.outer {
-			animation: turn 160s linear infinite;
-		}
-
-		.inner {
-			animation: turn 110s linear infinite reverse;
-		}
-
-		@keyframes turn {
-			to {
-				transform: rotate(360deg);
-			}
-		}
-
-		/* Petals and sparks lift out of the field, sway, and fade. Each one runs on its own clock. */
-		.mote {
-			animation: drift 9s ease-in infinite;
-		}
-
-		.motes g:nth-child(2n) .mote {
-			animation-duration: 12s;
-			animation-delay: -4s;
-		}
-
-		.motes g:nth-child(3n) .mote {
-			animation-duration: 10.5s;
-			animation-delay: -7s;
-		}
-
-		.motes g:nth-child(5n) .mote {
-			animation-duration: 14s;
-			animation-delay: -2s;
-		}
-
-		@keyframes drift {
-			0% {
-				opacity: 0;
-				transform: translate(0, 0) rotate(0);
-			}
-			12% {
-				opacity: 0.85;
-			}
-			55% {
-				transform: translate(18px, -90px) rotate(140deg);
-			}
-			100% {
-				opacity: 0;
-				transform: translate(-6px, -190px) rotate(300deg);
 			}
 		}
 	}

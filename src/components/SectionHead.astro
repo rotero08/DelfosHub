@@ -1,53 +1,30 @@
 ---
-// The heading every section opens with: its number in a cut slab, its name, how deep it sits
-// (the page is a descent) and one line about it. The diamond on the left is its stop on the rail.
-import { depths, ui, type Locale, type Section } from '../i18n/ui';
-
+// The heading every section opens with: its number in a cut slab, its name, one line.
 interface Props {
-	lang: Locale;
-	section: Section;
 	no: number;
 	title: string;
 	hint: string;
 }
 
-const { lang, section, no, title, hint } = Astro.props;
-const t = ui[lang];
-const depth = depths[section].toLocaleString(lang === 'en' ? 'en-US' : 'es');
+const { no, title, hint } = Astro.props;
 ---
 
 <header class="head">
-	<span class="stop" aria-hidden="true"></span>
 	<span class="no" aria-hidden="true">{String(no).padStart(2, '0')}</span>
 	<h2 class="display">{title}</h2>
-	<p class="layer" aria-hidden="true">{t.layer} {no} · {t.layerNames[section]} · {depth} m</p>
 	<p class="hint">{hint}</p>
 </header>
 
 <style>
 	.head {
-		position: relative;
 		display: grid;
 		grid-template-columns: auto 1fr;
-		grid-template-areas: 'no title' '. layer' '. hint';
 		align-items: center;
 		column-gap: 0.9rem;
 		margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
 	}
 
-	/* The section's stop on the descent rail that runs down the page. */
-	.stop {
-		position: absolute;
-		top: 1.25rem;
-		left: calc(-1 * var(--rail));
-		width: 0.85rem;
-		height: 0.85rem;
-		background: var(--mana);
-		transform: translate(-50%, -50%) rotate(45deg);
-	}
-
 	.no {
-		grid-area: no;
 		padding: 0.3rem 0.8rem 0.2rem 0.6rem;
 		background: var(--accent);
 		color: var(--on-accent);
@@ -61,7 +38,6 @@ const depth = depths[section].toLocaleString(lang === 'en' ? 'en-US' : 'es');
 	}
 
 	h2 {
-		grid-area: title;
 		display: flex;
 		align-items: center;
 		gap: 1.1rem;
@@ -76,34 +52,9 @@ const depth = depths[section].toLocaleString(lang === 'en' ? 'en-US' : 'es');
 		background: var(--line);
 	}
 
-	.layer {
-		grid-area: layer;
-		margin-top: 0.3rem;
-		font-family: var(--font-display);
-		font-size: 0.9rem;
-		font-weight: 600;
-		letter-spacing: 0.12em;
-		line-height: 1.2;
-		text-transform: uppercase;
-		color: var(--mana);
-	}
-
 	.hint {
-		grid-area: hint;
+		grid-column: 2;
 		margin-top: 0.35rem;
 		color: var(--muted);
-	}
-
-	/* Wide enough, the layer sits at the end of the title's rule instead of under the name. */
-	@media (min-width: 52rem) {
-		.head {
-			grid-template-columns: auto 1fr auto;
-			grid-template-areas: 'no title layer' '. hint hint';
-		}
-
-		.layer {
-			margin-top: 0;
-			text-align: right;
-		}
 	}
 </style>

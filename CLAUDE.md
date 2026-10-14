@@ -52,13 +52,13 @@ site.config.mjs      Site-wide switches: public URL, writing limit, source-link 
                      environment), analytics
 src/
   content.config.ts    schemas: a wrong or missing field fails the build with a clear message
-                       (`repo` is a repository name only; `rank` fills a language's diamonds;
-                       `card` holds the lines of the About's guild card, in each language file)
+                       (`repo` is a repository name only; `preview` captions a project's picture)
   i18n/ui.ts           interface words in both languages, and the list of sections
   components/          one file per section; Home.astro composes the page
   layouts/Base.astro   <head>, metadata, and the only script on the site
   styles/global.css    the design system: colours, type, shared shapes
   assets/fonts/        the four font files, self-hosted
+  assets/previews/     one 1280 x 640 picture per main project (optional), named after its id
 public/_headers      security headers (hand-written part)
 scripts/             sync-writing, write-headers, check, make-images
 ```
@@ -76,18 +76,12 @@ missing a field: extend the schema rather than hard-coding.
 carry a language tag. Write Spanish in a neutral register and avoid regionalisms.
 
 **The visual direction** is a game command menu under a painted sky: Persona-style interface
-(condensed slanted type, cut slabs that snap behind whatever is selected, hard offset shadows,
-key prompts) in a fantasy setting (night scene, moon, a crossroads signpost with one arm per
-project). The day theme is the same scene at dawn. Three moods are borrowed, none by name: the
-**long road** (a flower field in the project colours, petals and sparks of mana drifting up, a
-seal engraved over the moon), the **descent** (the page below the hero is a descent: each section
-is a layer with a depth in metres, a dashed rail with a stop at each heading, a depth meter in
-the bar, and the background darkens, or by day warms, as you go down) and the **guild**
-(spell cards with a sigil for the mini projects, the journey as a road, language levels as five
-diamonds, the About as a guild card, the way back up called "back to the surface"). Wording and
-art are original. Clarity wins over decoration: if an ornament competes with text, remove the
-ornament, and the section names stay plain (Projects, Writing, Mini projects…): the flavour lives
-in the small lines around them.
+(condensed slanted type, cut slabs that snap behind whatever is selected, hard offset shadows) in
+a fantasy concept-art setting (night scene, moon, a crossroads signpost with one arm per project).
+The day theme is the same scene at dawn. Clarity wins over decoration: if an ornament competes
+with text, remove the ornament. The owner asked for calm, nothing flashy or esoteric: no
+particles, meters, rails, sigils or invented lore. An addition earns its place by being useful
+(a picture of the project's site, a mark for the section being read), not by being decorative.
 
 - Colours come only from the tokens at the top of `global.css`. Dark is the default theme.
 - A project's colour is only ever a fill with `--ink` text on top, never a text colour. The
@@ -122,11 +116,15 @@ brings, and say so.
 `theme`). Keep the attribute on anything new that can be clicked. Nothing is sent until an
 endpoint is configured.
 
-**Motion and keys.** Everything that moves (the seal, the petals, the orb, the lantern, a sigil
-turning) sits inside `prefers-reduced-motion: no-preference`; with reduced motion the scene is
-still. The menus move with the arrow keys and open an entry with its number, but only while focus
-is inside the menu, so no single-key shortcut is active on the page at large. The depth meter and
-the "section being read" mark in the bar are the only scroll-driven script besides the theme.
+**Motion and keys.** Anything that moves sits inside `prefers-reduced-motion: no-preference` or is
+neutralised by the global reduce rule. The menus move with the arrow keys, but only while focus is
+inside them, so no single-key shortcut is active on the page at large. The only scroll-driven
+script besides the theme is the mark in the bar for the section being read.
+
+**Pictures of the projects.** A main project may carry a `preview` (a 1280 x 640 capture of its home
+page, `src/assets/previews/<id>.webp`, with `alt` text in both languages). Capture it from the live
+site, **look at it** before committing (nothing personal may be in the frame, and strip metadata),
+and expect to refresh it when the site changes. Astro resizes it at build time; it loads lazily.
 
 ## Verifying a change
 

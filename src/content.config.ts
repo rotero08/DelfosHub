@@ -40,6 +40,8 @@ const projects = defineCollection({
 		kind: text,
 		description: text,
 		repo: repoName.optional(),
+		// A picture of the project's site: the file `src/assets/previews/<id>.webp`, 1280 by 640. `alt` says what it shows.
+		preview: z.object({ alt: text }).optional(),
 		facts: z.array(text).max(4).default([]),
 		feed: z
 			.object({
@@ -95,8 +97,7 @@ const experience = defineCollection({
 		focus: text,
 		timeline: z.array(z.object({ when: text, role: text, detail: text })),
 		skills: z.array(z.object({ name: text, items: z.array(z.string()) })),
-		// `rank` (1 to 5) fills the pips beside a language.
-		languages: z.array(z.object({ name: text, level: text, rank: z.number().int().min(1).max(5) })),
+		languages: z.array(z.object({ name: text, level: text })),
 	}),
 });
 
@@ -106,8 +107,6 @@ const about = defineCollection({
 		contact: z.string().optional(),
 		contactUrl: z.union([z.literal(''), z.string().regex(/^(https:\/\/|mailto:)/)]).optional(),
 		contactLabel: z.string().optional(),
-		// The lines of the guild card, in this language. Keep them to what the page already says.
-		card: z.array(z.object({ label: z.string(), value: z.string() })).max(6).default([]),
 	}),
 });
 

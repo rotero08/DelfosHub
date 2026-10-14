@@ -38,7 +38,10 @@ Each file starts with a comment that explains its fields. Read it before editing
    is a public page that is safe to show (a store listing, a live demo). A tile without a link is fine.
 4. **A new project needs a colour and a glyph.** Pick a bright colour that no other project
    uses; it is only ever a fill under dark text. The build stops if it is too dark. The glyph is
-   one to three characters drawn large on the card (a kanji, a number, initials).
+   one to three characters drawn large on the card (a kanji, a number, initials). A picture of
+   the project's site is optional: a 1280 x 640 capture at `src/assets/previews/<id>.webp` plus
+   `preview.alt` in both languages. Look at the capture before using it: nothing personal in the
+   frame, no metadata in the file.
 5. **Keep it short.** A project description is two sentences at most, facts are a few words,
    a mini project is one sentence. The page has to stay scannable.
 6. Order in the file is order on the page.

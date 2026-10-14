@@ -11,11 +11,11 @@ interface Props {
 
 const { lang, no } = Astro.props;
 const t = ui[lang];
-const { Content, contact, contactUrl, contactLabel, card = [] } = await getAbout(lang);
+const { Content, contact, contactUrl, contactLabel } = await getAbout(lang);
 ---
 
 <section class="section wrap" id="about">
-	<SectionHead lang={lang} section="about" no={no} title={t.nav.about} hint={t.hint.about} />
+	<SectionHead no={no} title={t.nav.about} hint={t.hint.about} />
 
 	<div class="cols">
 		<div class="prose">
@@ -23,46 +23,16 @@ const { Content, contact, contactUrl, contactLabel, card = [] } = await getAbout
 		</div>
 
 		{
-			(card.length > 0 || contact || contactUrl) && (
-				<div class="side">
-					{card.length > 0 && (
-						<section class="guild" aria-label={t.card}>
-							<header class="guild-top">
-								<p class="label">{t.card}</p>
-								<svg class="crest" viewBox="-20 -20 40 40" aria-hidden="true">
-									<circle r="16" />
-									<polygon points="0,-12 10.4,-6 10.4,6 0,12 -10.4,6 -10.4,-6" />
-									<polygon points="0,-12 10.4,6 -10.4,6" />
-									<circle r="2" />
-								</svg>
-							</header>
-							<p class="who" aria-hidden="true">
-								<span class="wordmark">
-									Delfos<span class="wordmark-t">T</span>
-								</span>
-							</p>
-							<dl class="lines">
-								{card.map((row) => (
-									<div>
-										<dt>{row.label}</dt>
-										<dd>{row.value}</dd>
-									</div>
-								))}
-							</dl>
-						</section>
+			(contact || contactUrl) && (
+				<aside class="contact">
+					<h3 class="label">{t.contact}</h3>
+					{contact && <p>{contact}</p>}
+					{contactUrl && (
+						<a class="button" href={contactUrl} data-track="contact">
+							{contactLabel || t.contact}
+						</a>
 					)}
-					{(contact || contactUrl) && (
-						<aside class="contact">
-							<h3 class="label">{t.contact}</h3>
-							{contact && <p>{contact}</p>}
-							{contactUrl && (
-								<a class="button" href={contactUrl} data-track="contact">
-									{contactLabel || t.contact}
-								</a>
-							)}
-						</aside>
-					)}
-				</div>
+				</aside>
 			)
 		}
 	</div>
@@ -96,74 +66,6 @@ const { Content, contact, contactUrl, contactLabel, card = [] } = await getAbout
 		text-decoration-color: var(--accent);
 		text-decoration-thickness: 2px;
 		text-underline-offset: 0.2em;
-	}
-
-	.side {
-		display: grid;
-		align-content: start;
-		gap: 1.25rem;
-	}
-
-	/* The guild card: who this is, in the manner of a status window. */
-	.guild {
-		position: relative;
-		display: grid;
-		gap: 0.9rem;
-		padding: 1.2rem 1.4rem 1.3rem;
-		border: 1px solid var(--line);
-		border-top: 4px solid var(--mana);
-		background: var(--surface);
-		box-shadow: 8px 8px 0 var(--line);
-	}
-
-	.guild-top {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.crest {
-		width: 2.6rem;
-		height: 2.6rem;
-		fill: none;
-		stroke: var(--mana);
-		stroke-width: 1.1;
-	}
-
-	.who {
-		font-size: 3rem;
-		line-height: 1;
-	}
-
-	.lines {
-		display: grid;
-		gap: 0;
-		border-top: 1px solid var(--line);
-	}
-
-	.lines > div {
-		display: grid;
-		grid-template-columns: 8.2rem 1fr;
-		gap: 0.8rem;
-		padding-block: 0.55rem;
-		border-bottom: 1px solid var(--line);
-		align-items: baseline;
-	}
-
-	.lines dt {
-		font-family: var(--font-display);
-		font-size: 0.9rem;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: var(--muted);
-	}
-
-	.lines dd {
-		margin: 0;
-		font-size: 1.02rem;
-		font-weight: 600;
-		line-height: 1.35;
 	}
 
 	.contact {

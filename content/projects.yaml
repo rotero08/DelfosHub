@@ -8,6 +8,9 @@
 #   language  the language the project itself is written in (en, es, ja)
 #   repo      optional. The name of the project's source repository (the name only, never an
 #             address). A "Source" link appears only in builds where HUB_GITHUB_OWNER is set.
+#   preview   optional. A picture of the project's site, shown in its card: put a 1280 x 640
+#             image at src/assets/previews/<id>.webp and say what it shows in `alt`. Take it
+#             from the live site and look at it first: nothing personal may be in the frame.
 #   feed      optional. Lets `pnpm sync` pull the project's newest posts into Writing.
 #               type: rss      url: address of an RSS or Atom feed
 #               type: sitemap  url: address of a sitemap, match: pattern of post addresses,
@@ -20,6 +23,10 @@
   color: "#ff5c3e"
   language: es
   repo: hibiblog
+  preview:
+    alt:
+      en: The home page of Hibi
+      es: La página de inicio de Hibi
   kind:
     en: Blog and guides
     es: Blog y guías
@@ -48,6 +55,10 @@
   color: "#e9c558"
   language: en
   repo: PianoGuide
+  preview:
+    alt:
+      en: The home page of The Complete Pianist
+      es: La página de inicio de The Complete Pianist
   kind:
     en: Self-study guide
     es: Guía de autoestudio
