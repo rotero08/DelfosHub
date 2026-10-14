@@ -23,6 +23,9 @@ const canonical = absolute(homeOf(lang));
 const preview = absolute('/og.png');
 const { umami } = site.analytics;
 const counting = Boolean(umami.websiteId);
+// Only the published address is counted: a visit to localhost, or to a preview of the site
+// on another address, is not a visit.
+const countedHost = new URL(site.url).hostname;
 const ogLocale = { en: 'en_US', es: 'es_ES' };
 
 const jsonLd = {
@@ -84,7 +87,7 @@ const jsonLd = {
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
 		{
 			counting && (
-				<script is:inline defer src={umami.script} data-website-id={umami.websiteId} data-host-url={umami.host} data-do-not-track="true" />
+				<script is:inline defer src={umami.script} data-website-id={umami.websiteId} data-host-url={umami.host} data-domains={countedHost} data-do-not-track="true" />
 			)
 		}
 	</head>

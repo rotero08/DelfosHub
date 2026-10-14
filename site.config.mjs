@@ -22,13 +22,14 @@ export default {
 	},
 
 	// Analytics: Umami Cloud, which counts page views and clicks without cookies and without
-	// following anyone around. Paste the website ID from the Umami dashboard (Websites, the site,
-	// Edit) into `websiteId` to switch it on. While it is empty the page carries no tracker and
-	// makes no request to anyone. `script` and `host` are Umami Cloud's addresses: where the
-	// tracker comes from and where it reports (the security policy allows exactly these two).
+	// following anyone around. `websiteId` is the ID from the Umami dashboard (Websites, the
+	// site, Edit). Empty it and the page carries no tracker and makes no request to anyone.
+	// `script` and `host` are Umami Cloud's addresses: where the tracker comes from and where it
+	// reports (the security policy allows exactly these two). The tracker is told to honour Do
+	// Not Track.
 	analytics: {
 		umami: {
-			websiteId: '',
+			websiteId: '386e6888-7d66-403d-89a6-d2242bbfbd22',
 			script: 'https://cloud.umami.is/script.js',
 			host: 'https://gateway.umami.is',
 		},

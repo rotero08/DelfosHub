@@ -114,8 +114,8 @@ brings, and say so.
 
 **Analytics hooks.** Links and buttons carry `data-track="<kind>:<id>"` (`project:hibi`,
 `post:/path/`, `mini:<id>`, `repo:<id>`, `nav:<section>`, `menu-hero:<section>`, `lang:es`,
-`theme`). Keep the attribute on anything new that can be clicked. Nothing is sent until Umami is
-switched on (see Status); its event names are cut to 50 characters.
+`theme`). Keep the attribute on anything new that can be clicked. Umami counts them (see
+Status); its event names are cut to 50 characters.
 
 **Motion and keys.** Anything that moves sits inside `prefers-reduced-motion: no-preference` or is
 neutralised by the global reduce rule. The menus move with the arrow keys, but only while focus is
@@ -155,13 +155,15 @@ By hand, `pnpm build` then `pnpm dlx wrangler@4 deploy` does the same thing.
 **GitHub.** The repository is public and its history is a single line under the `DelfosT`
 identity, written after the first history was deleted.
 
-**Deliberately not done yet** (the owner asked to hold these for a later session):
+**Analytics.** Umami Cloud, the service the first hub used: cookie-free page views, and a click
+event for everything marked `data-track`. The website ID is set in `site.config.mjs`
+(`analytics.umami.websiteId`), so every page carries the tracker, the security policy allows
+exactly its two hosts and the footer says visits are counted. It counts only the published
+address (`data-domains`, taken from `url`), so localhost and previews are silent, and it honours
+Do Not Track. Clearing the ID switches all of that off again. It reaches visitors with the next
+deploy, that is, the next push to `main`.
 
-- **Analytics.** Umami Cloud, the service the first hub used: cookie-free page views, and a click
-  event for everything marked `data-track`. It is built and dormant: paste the website ID from the
-  Umami dashboard into `analytics.umami.websiteId` in `site.config.mjs` to switch it on (the first
-  hub's ID was not kept anywhere on the machine). Switching it on adds the tracker, allows exactly
-  its two hosts in the security policy and changes the footer note; the tracker honours Do Not
-  Track. Nothing is collected before that.
+**Deliberately not done yet** (the owner asked to hold this for a later session):
+
 - **Contact.** The owner chose to show no contact details for now. `content/about/*.md` accepts a
   `contactUrl` when that changes.
